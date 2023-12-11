@@ -18,9 +18,11 @@
   background-color: #A5494D;
   padding: 10px;
   text-align: center;
-  overflow: hidden;
-  position: relative; /* Set position to relative to allow z-index to work */
-  z-index: 1; /* Stay on top of everything */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
 }
 
 #logo {
@@ -47,6 +49,7 @@
   position: fixed;
   z-index: 0;
   left: 2%;
+  top: 12%;
   background-color: #ffffff;
   border-right: 2px solid black;
   text-align: justify;
@@ -72,6 +75,7 @@
 .ViewProfile{
       width: 600px;
       margin: 50px auto;
+      margin-top:10%;
       background-color: #d9d9d9; /* Grey background color for the container */
       padding: 20px;
       border: 2px solid #999; /* Border color for the container */
@@ -137,6 +141,7 @@
 
 #CheckIn_{
   margin:50px auto;
+  margin-top:10%;
   margin-left:30%;
   padding: 10px;
   width: 40%; /* Set a standard width for the input */
@@ -157,6 +162,7 @@
 
 #CheckOut_{
   margin:50px auto;
+  margin-top:10%;
   margin-left:30%;
   padding: 10px;
   width: 40%; /* Set a standard width for the input */
@@ -177,6 +183,8 @@
 
 #BookManagement{
     text-align:center;
+    margin-top:10%;
+
 }
 /* Style the counter cards */
 #card, #card1, #card2, #card3 {
@@ -278,6 +286,9 @@
   cursor: pointer;
 }
 
+#WorkStudy{
+margin-top:10%;
+}
 
 #ScheduleManagement{
   text-align:center;
@@ -406,6 +417,7 @@
 
 #scheduleTable, #attendanceTable, #Catalog{
   width: 80%;
+  margin-top:10%;
   margin: 20px auto;
   margin-left:20%;
   border-collapse: collapse;
