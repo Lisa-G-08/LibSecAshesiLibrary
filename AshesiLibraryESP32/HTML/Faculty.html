@@ -17,9 +17,11 @@ body {
   background-color: #A5494D;
   padding: 10px;
   text-align: center;
-  overflow: hidden;
-  position: relative; /* Set position to relative to allow z-index to work */
-  z-index: 1; /* Stay on top of everything */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
 }
 
 #logo {
@@ -49,6 +51,7 @@ body {
   position: fixed;
   z-index: 0;
   left: 2%;
+  top: 12%;
   background-color: #ffffff;
   border-right: 2px solid black;
   text-align: justify;
@@ -67,15 +70,11 @@ body {
   color: #A5494D;
 }
 
-/* Style for the content area */
-#content {
-  margin-left: 17%; /* Adjusted to use percentage */
-  padding: 16px;
-}
 
 .ViewProfile{
       width: 80%; /* Use a percentage width for responsiveness */
       max-width: 600px; /* Set a maximum width to maintain a reasonable size on larger screens */
+      margin-top:10%;
       margin: 50px auto;
       margin-left:35%;
       background-color: #d9d9d9; /* Grey background color for the container */
@@ -143,6 +142,10 @@ body {
     width: 90%; /* Adjust the width for smaller screens */
   }
 }
+    
+ #ViewCatalog, #BorrowedBooks{
+    margin-top:10%;
+ }
 
 #Catalog, #booksTable{
   width: 75%;
