@@ -17,11 +17,13 @@ body {
   background-color: #A5494D;
   padding: 10px;
   text-align: center;
-  overflow: hidden;
-  position: relative; /* Set position to relative to allow z-index to work */
-  z-index: 1; /* Stay on top of everything */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
 }
-
+    
 #logo {
   max-height: 10%;
   max-width: 6%;
@@ -42,18 +44,17 @@ body {
   color: black;
 }
 
-/* Style for the side navigation */
 #sidenav {
   height: calc(100vh); /* Adjusted to use percentage */
   width: 15%; /* Adjusted to use percentage */
   position: fixed;
   z-index: 0;
   left: 2%;
+  top: 12%;
   background-color: #ffffff;
   border-right: 2px solid black;
   text-align: justify;
 }
-
 
 #sidenav a {
   padding: 15px 8px;
@@ -74,10 +75,9 @@ body {
 }
 
 .ViewProfile{
-      width: 80%; /* Use a percentage width for responsiveness */
-      max-width: 600px; /* Set a maximum width to maintain a reasonable size on larger screens */
+      width: 600px;
       margin: 50px auto;
-      margin-left:35%;
+      margin-top:10%;
       background-color: #d9d9d9; /* Grey background color for the container */
       padding: 20px;
       border: 2px solid #999; /* Border color for the container */
@@ -144,6 +144,10 @@ body {
   }
 }
 
+#ViewCatalog, #BorrowedBooks{
+  margin-top:10%;
+}
+    
 #Catalog, #booksTable{
   width: 75%;
   margin: 20px auto;
