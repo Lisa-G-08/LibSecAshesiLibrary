@@ -1,248 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Warren Library</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fff;
-            color: #8B0000;
-        }
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        color: #8b0000;
+      }
 
-        header {
-            background-color: #8B0000;
-            color: #fff;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      header {
+        background-color: #8b0000;
+        color: #fff;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .logo {
-            display: flex;
-            align-items: center;
-        }
+      .logo {
+        display: flex;
+        align-items: center;
+      }
 
-        .logo img {
-            height: 60px;
-            margin-right: 10px;
-        }
+      .logo img {
+        height: 60px;
+        margin-right: 10px;
+      }
 
-        .library-name {
-            font-size: 24px;
-            font-weight: bold;
-            color: #fff;
-            display: inline-block;
-            padding: 0 10px;
-        }
+      .library-name {
+        font-size: 24px;
+        font-weight: bold;
+        color: #fff;
+        display: inline-block;
+        padding: 0 10px;
+      }
 
-        /* Your existing styles here */
+      /* Your existing styles here */
 
-        /* Additional styles for the register section */
-        .login-register-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 20px auto; /* Center the box */
-            background-image: url('Ashesi_Campus.jpeg');
-            /* background-repeat: no-repeat; */
-            /* background-size: cover; */
-            background-position: center;
-        }
+      /* Additional styles for the register section */
+      .login-register-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px auto; /* Center the box */
+        background-image: url("Ashesi_Campus.jpeg");
+        /* background-repeat: no-repeat; */
+        /* background-size: cover; */
+        background-position: center;
+      }
 
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            width: 500px;
-            margin: 10px;
-            background-color: #fff; /* Gray background */
-            padding: 40px;
-            border-radius: 15px;
-            margin-top: 2%;
-        }
+      .login-form {
+        display: flex;
+        flex-direction: column;
+        width: 500px;
+        margin: 10px;
+        background-color: #fff; /* Gray background */
+        padding: 40px;
+        border-radius: 15px;
+        margin-top: 2%;
+      }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+      .form-group {
+        margin-bottom: 15px;
+      }
 
-        .form-group label {
-            font-size: 14px;
-            margin-bottom: 100px;
-        }
+      .form-group label {
+        font-size: 14px;
+        margin-bottom: 100px;
+      }
 
-        .form-group input,
-        .form-group select {
-            padding: 10px;
-            border: 1px solid #8B0000;
-            border-radius: 5px;
-        }
+      .form-group input,
+      .form-group select {
+        padding: 10px;
+        border: 1px solid #8b0000;
+        border-radius: 5px;
+      }
 
-        button {
-            background-color: #8B0000; /* Red wine background */
-            color: #fff;
-            padding: 10px 10% 10px 10%;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;;
-        }
+      button {
+        background-color: #8b0000; /* Red wine background */
+        color: #fff;
+        padding: 10px 10% 10px 10%;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
 
-        .Register-link {
-            margin-top: 20px;
-            text-align: center;
-            color: #000; /* Change text color to black */
-        }
+      .Register-link {
+        margin-top: 20px;
+        text-align: center;
+        color: #000; /* Change text color to black */
+      }
 
-        .Register-link a,
-        .Register-link a:visited {
-            color: #8B0000;
-        }
+      .Register-link a,
+      .Register-link a:visited {
+        color: #8b0000;
+      }
 
-        /* Additional styles for the contact button */
-        .contact-button {
-            background-color: #8B0000;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+      /* Additional styles for the contact button */
+      .contact-button {
+        background-color: #8b0000;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
-        input{
-            width: 100%;
-        }
+      input {
+        width: 100%;
+      }
 
-        .btn-container{
-            /* display: flex; */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        
-            margin-top: 20px; /* Adjust the margin as needed */
-            background-color: redwine; /* Initial background color */
-            color: white; /* Initial text color */
-            transition: background-color 0.3s ease, color 0.3s ease; /* Add a smooth transition effect */
-        }
+      .btn-container {
+        /* display: flex; */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
 
-        button:hover {
-            background-color: white; /* New background color on hover */
-            color: #8B0000ed; /* New text color on hover */
-            transition: 0.5s ease;
-            
-        }
+        margin-top: 20px; /* Adjust the margin as needed */
+        background-color: redwine; /* Initial background color */
+        color: white; /* Initial text color */
+        transition: background-color 0.3s ease, color 0.3s ease; /* Add a smooth transition effect */
+      }
+
+      button:hover {
+        background-color: white; /* New background color on hover */
+        color: #8b0000ed; /* New text color on hover */
+        transition: 0.5s ease;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <div class="logo">
-            <img src="ashesi-logo.png" alt="Ashesi Logo">
-            <div class="library-name">Warren Library Register Page</div>
-        </div>
-        <button class="contact-button">Contact Us</button>
+      <div class="logo">
+        <img src="ashesi-logo.png" alt="Ashesi Logo" />
+        <div class="library-name">Warren Library Register Page</div>
+      </div>
+      <button class="contact-button">Contact Us</button>
     </header>
 
     <div class="login-register-section">
-        <div class="login-form">
-            <h2>Login</h2>
-            <div class="form-group">
-                <label for="userType">Login as:</label>
-                <select id="userType">
-                    <option value="admin">Admin</option>
-                    <option value="librarian">Librarian</option>
-                    <option value="student">Student</option>
-                    <option value="staff">Staff/Faculty</option>
-                    <option value="facultyIntern">Faculty Intern</option>
-                    <option value="guest">Guest</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" placeholder="Enter your email">
-            </div>
-            <div class="form-group">
-                <label for="password">ID Number or Admin Password:</label>
-                <input type="password" id="password" placeholder="Enter your ID Number or Admin Password">
-            </div>
-            <div class="btn-container">
-                <button onclick="Login()">Login</button>
-            </div>
-
-            <div class="Register-link">
-                <p>You have no account? <a href="#">Register here!</a></p>
-                <a href="#" class="forgot-password">Forgot Password?</a>
-            </div>
+      <div class="login-form">
+        <h2>Login</h2>
+        <div class="form-group">
+          <label for="userType">Login as:</label>
+          <select id="userType">
+            <option value="admin">Admin</option>
+            <option value="librarian">Librarian</option>
+            <option value="Student">Student</option>
+            <option value="staff">Staff/Faculty</option>
+            <option value="facultyIntern">Faculty Intern</option>
+          </select>
         </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" placeholder="Enter your email" />
+        </div>
+        <div class="form-group">
+          <label for="password">ID Number or Admin Password:</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your ID Number or Admin Password"
+          />
+        </div>
+        <div class="btn-container">
+          <button onclick="Login()">Login</button>
+        </div>
+
+        <div class="Register-link">
+          <p>You have no account? <a href="#">Register here!</a></p>
+          <a href="#" class="forgot-password">Forgot Password?</a>
+        </div>
+      </div>
     </div>
 
-    <!-- Include Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
 
     <script>
-        const firebaseConfig = {
-      apiKey: "AIzaSyCzSMSm6ZHGoLGA7AToiIMHByDFz9yIIbk",
-      authDomain: "ashesilibraryesp32-fd5b8.firebaseapp.com",
-      databaseURL:
-        "https://ashesilibraryesp32-fd5b8-default-rtdb.firebaseio.com",
-      projectId: "ashesilibraryesp32-fd5b8",
-      storageBucket: "ashesilibraryesp32-fd5b8.appspot.com",
-      messagingSenderId: "185836313770",
-      appId: "1:185836313770:web:ff9137a24273f2ed0844d3",
-      measurementId: "G-J8PWV52BJE",
-    };
+      const firebaseConfig = {
+        apiKey: "AIzaSyCzSMSm6ZHGoLGA7AToiIMHByDFz9yIIbk",
+        authDomain: "ashesilibraryesp32-fd5b8.firebaseapp.com",
+        databaseURL:
+          "https://ashesilibraryesp32-fd5b8-default-rtdb.firebaseio.com",
+        projectId: "ashesilibraryesp32-fd5b8",
+        storageBucket: "ashesilibraryesp32-fd5b8.appspot.com",
+        messagingSenderId: "185836313770",
+        appId: "1:185836313770:web:ff9137a24273f2ed0844d3",
+        measurementId: "G-J8PWV52BJE",
+      };
 
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+      firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
 
-        function Login() {
-            const userType = document.getElementById("userType").value;
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
+      function Login() {
+        const userType = document.getElementById("userType").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-            if (userType === "admin" && email === "admin@ashesi.edu.gh" && password === "admin1234") {
-                window.location.href = "admin.html";
-            } else {
-                // Authenticate user with email and password
-                firebase.auth().signInWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        // User authenticated successfully
-                        const user = userCredential.user;
-                        // Check user type and redirect to the respective landing page
-                        database.ref(`${userType}s/${user.uid}`).once("value")
-                            .then((snapshot) => {
-                                const userData = snapshot.val();
+        console.log("Login attempt:", userType, email);
 
-                                if (userData) {
-                                    if (userType.toLowerCase() === "librarian") {
-                                        window.location.href = "Librarian.html";
-                                    } else if (userType.toLowerCase() === "student") {
-                                        window.location.href = "student.html";
-                                    } else if (userType.toLowerCase() === "staff") {
-                                        window.location.href = "Faculty.html";
-                                    } else if (userType.toLowerCase() === "facultyintern") {
-                                        window.location.href = "FacultyIntern.html";
-                                    } else {
-                                        // Handle other user types or show an error
-                                        console.error("Invalid user type");
-                                    }
-                                } else {
-                                    console.error("User not found in the database for the specified type");
-                                }
-                            });
-                    })
-                    .catch((error) => {
-                        // Handle errors (e.g., wrong credentials)
-                        console.error(error.message);
-                    });
-            }
+        if (
+          userType === "admin" &&
+          email === "admin@ashesi.edu.gh" &&
+          password === "admin1234"
+        ) {
+          console.log("Admin login successful");
+          window.location.href = "admin.html";
+        } else {
+          // Use the email as the key when fetching user data
+          database
+            .ref(`${userType}s/${email}`)
+            .once("value")
+            .then((snapshot) => {
+              const userData = snapshot.val();
+
+              console.log("User data from database:", userData);
+
+              if (userData && userData.email === email) {
+                console.log("User login successful");
+
+                switch (userType) {
+                  case "Student":
+                    window.location.href = "student.html";
+                    break;
+                  case "staff":
+                    window.location.href = "staff.html";
+                    break;
+                  case "facultyIntern":
+                    window.location.href = "facultyIntern.html";
+                    break;
+                  default:
+                    alert("Invalid user type");
+                }
+              } else {
+                console.log("Invalid email or password");
+                alert("Invalid email or password");
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching user data:", error);
+            });
         }
+      }
     </script>
-</body>
+  </body>
 </html>
-
