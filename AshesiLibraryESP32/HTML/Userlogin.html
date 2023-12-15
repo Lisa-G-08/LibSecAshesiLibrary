@@ -216,7 +216,9 @@
           password === "admin1234"
         ) {
           console.log("Admin login successful");
-          window.location.href = "admin.html";
+          <button onclick="window.location.href = 'admin.html'; target='_blank'">
+            Admin Panel
+          </button>;
         } else if (userType === "Student") {
           const userTypes = ["Student"];
           userTypes.forEach((userType) => {
