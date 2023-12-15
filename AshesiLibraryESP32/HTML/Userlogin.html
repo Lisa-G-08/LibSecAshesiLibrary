@@ -190,6 +190,11 @@
     <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
 
     <script>
+      function setCookie(name, value, days) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+      }
       const firebaseConfig = {
         apiKey: "AIzaSyCzSMSm6ZHGoLGA7AToiIMHByDFz9yIIbk",
         authDomain: "ashesilibraryesp32-fd5b8.firebaseapp.com",
@@ -209,6 +214,7 @@
         const userType = document.getElementById("userType").value;
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
+        document.cookie = `password=${email}; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/`;
 
         if (
           userType === "admin" &&
@@ -272,6 +278,8 @@
                 snapshot.forEach((user) => {
                   const userData = user.val();
                   if (userData.email === email && user.key === password) {
+                    setCookie("librarianPassword", email, 1); // Change the expiration time as needed
+
                     window.location.href = "Librarian.html";
                   }
                 });

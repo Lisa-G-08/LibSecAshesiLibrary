@@ -1855,9 +1855,9 @@
         const bookRFID = document.getElementById("bookRFID").value;
         const bookName = document.getElementById("bookName").value;
         const bookSubject = document.getElementById("bookSubject").value;
-        const bookAssignedLibrarian = 'default';
-        const bookAssignedStudent = 'default';
-        const bookAssignedDuration = 'default';
+        const bookAssignedLibrarian = "default";
+        const bookAssignedStudent = "default";
+        const bookAssignedDuration = "default";
 
         if (
           !bookRFID ||
@@ -1960,6 +1960,25 @@
         document.getElementById("SetCode").style.display = "none";
         document.querySelector(".icon-container").style.display = "block";
       }
+      function getCookie(name) {
+        const cookieName = `${name}=`;
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i].trim();
+          if (cookie.indexOf(cookieName) === 0) {
+            return cookie.substring(cookieName.length, cookie.length);
+          }
+        }
+        return null;
+      }
+
+      // Example of how to retrieve the password
+      document.addEventListener("DOMContentLoaded", function () {
+        const librarianPassword = getCookie("librarianPassword");
+        if (librarianPassword) {
+          console.log("Librarian Password:", librarianPassword);
+        }
+      });
     </script>
   </body>
 </html>

@@ -568,34 +568,36 @@
     }
   </style>
   <body>
-    <div id="formContainer">
-      <div id="BookInfo">
-        <h2>Book Info</h2>
-        <label for="bookRFID">Book RFID:</label>
-        <input type="text" id="bookRFID" />
-
-        <label for="bookName">Name:</label>
-        <input type="text" id="bookName" />
-
-        <label for="bookSubject">Subject:</label>
-        <input type="text" id="bookSubject" />
-
-        <label for="bookAssignedLibrarian">Assigned Librarian:</label>
-        <input type="text" id="bookAssignedLibrarian" />
-
-        <label for="bookAssignedStudent">Assigned Student:</label>
-        <input type="text" id="bookAssignedStudent" />
-
-        <label for="bookAssignedDuration">Assigned Duration:</label>
-        <input type="text" id="bookAssignedDuration" />
-
-        <button onclick="addBook()">Submit</button>
-
-        <button id="CancelSave" onclick="CancelBookInfo(event)">
-          <i class="fa-solid fa-ban"></i> Cancel
-        </button>
-        <br />
-        <br />
+    <div id="ProfileViewing">
+      <div class="ViewProfile">
+        <div class="profile">
+          <img id="uploadImage" src="default-image.jpg" alt="Profile Picture" />
+          <div class="separator"></div>
+        </div>
+        <div class="info">
+          <label>First Name:</label>
+          <input type="text" id="fname" class="editable" disabled /><br />
+          <label>Last Name:</label>
+          <input type="text" id="lname" class="editable" disabled /><br />
+          <label>Email:</label>
+          <input type="email" id="email" class="editable" disabled /><br />
+          <label>Phone:</label>
+          <input type="tel" id="phone" class="editable" disabled /><br />
+          <label>Staff ID:</label>
+          <input type="number" id="StaffID" class="editable" disabled /><br />
+          <button id="EditProfile" onclick="EditProfile()">Edit Profile</button>
+          <button
+            type="submit"
+            id="SaveProfile"
+            onclick="SaveProfile()"
+            style="display: none"
+          >
+            Save Profile
+          </button>
+          <button id="Cancel" onclick="Cancel(event)" style="display: none">
+            <i class="fa-solid fa-ban"></i> Cancel
+          </button>
+        </div>
       </div>
     </div>
   </body>
@@ -616,58 +618,129 @@
 
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
-    function addBook() {
-      const bookRFID = document.getElementById("bookRFID").value;
-      const bookName = document.getElementById("bookName").value;
-      const bookSubject = document.getElementById("bookSubject").value;
-      const bookAssignedLibrarian = document.getElementById(
-        "bookAssignedLibrarian"
-      ).value;
-      const bookAssignedStudent = document.getElementById(
-        "bookAssignedStudent"
-      ).value;
-      const bookAssignedDuration = document.getElementById(
-        "bookAssignedDuration"
-      ).value;
+    function EditProfile() {
+      var inputs = document.querySelectorAll(".editable[disabled]");
+      // Loop through each input and enable it
+      inputs.forEach(function (input) {
+        input.removeAttribute("disabled");
+        input.style.border = "1px solid #A5494D"; // Set border style using JavaScript
+      });
 
-      if (
-        !bookRFID ||
-        !bookName ||
-        !bookSubject ||
-        !bookAssignedLibrarian ||
-        !bookAssignedStudent ||
-        !bookAssignedDuration
-      ) {
-        alert("Please enter valid information for all fields");
-        return;
-      }
+      document.getElementById("EditProfile").style.display = "none";
+      document.getElementById("SaveProfile").style.display = "inline-block";
+      document.getElementById("Cancel").style.display = "inline-block";
+    }
+
+    function SaveProfile() {
+      var fname = document.getElementById("fname").value;
+      var lname = document.getElementById("lname").value;
+      var StaffID = document.getElementById("StaffID").value;
+      var email = document.getElementById("email").value;
+      var phone = document.getElementById("phone").value;
+
+      // Retrieve librarianPassword from the "librarianPassword" cookie
+      var userID = getCookie("librarianPassword");
 
       database
-        .ref(`LibraryRecords/${bookRFID}`)
-        .set({
-          name: bookName,
-          subject: bookSubject,
-          assignedLibrarian: bookAssignedLibrarian,
-          assignedStudent: bookAssignedStudent,
-          assignedDuration: bookAssignedDuration,
-          approval: false,
-          buzzerStatus: false,
+        .ref(`Librarians/${userID}`)
+        .update({
+          fname: fname,
+          lname: lname,
+          StaffID: StaffID,
+          email: email,
+          phone: phone,
         })
         .then(() => {
-          // Data successfully written to the database
-          console.log("Book added successfully!");
-          document.getElementById("bookRFID").value = "";
-          document.getElementById("bookName").value = "";
-          document.getElementById("bookSubject").value = "";
-          document.getElementById("bookAssignedLibrarian").value = "";
-          document.getElementById("bookAssignedStudent").value = "";
-          document.getElementById("bookAssignedDuration").value = "";
+          // Display users after saving profile
+          displayUsers();
+
+          // Disable inputs after saving
+          var inputs = document.querySelectorAll(".editable:not([disabled])");
+          inputs.forEach(function (input) {
+            input.setAttribute("disabled", "disabled");
+            input.style.border = "0";
+          });
+
+          document.getElementById("EditProfile").style.display = "block";
+          document.getElementById("SaveProfile").style.display = "none";
+          document.getElementById("Cancel").style.display = "none";
         })
         .catch((error) => {
-          // Handle errors during database write
-          console.error("Error adding book:", error);
-          alert("Error adding book. Please check the console for details.");
+          console.error("Error updating profile:", error);
         });
     }
+
+    function Cancel(event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+      document.getElementById("EditProfile").style.display = "block";
+      document.getElementById("SaveProfile").style.display = "none";
+      document.getElementById("Cancel").style.display = "none";
+
+      var inputs = document.querySelectorAll(".editable:not([disabled])");
+      inputs.forEach(function (input) {
+        input.setAttribute("disabled", "disabled");
+        input.style.border = "0";
+      });
+    }
+
+    function editUser(userType, userID, userEmail) {
+      const newEmail = window.prompt(
+        `Current Email: ${userEmail}\nEnter new Email:`
+      );
+
+      if (newEmail !== null) {
+        database.ref(`${userType}s/${userID}`).update({
+          email: newEmail,
+        });
+
+        displayUsers();
+      }
+    }
+
+    function displayUsers() {
+      const fname = document.getElementById("fname");
+      const lname = document.getElementById("lname");
+      const StaffID = document.getElementById("StaffID");
+      const email = document.getElementById("email");
+      const phone = document.getElementById("phone");
+
+      const userTypes = ["Librarian"];
+      userTypes.forEach((userType) => {
+        database
+          .ref(`${userType}s`)
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((user) => {
+              const userData = user.val();
+              fname.value = userData.fname || "";
+              lname.value = userData.lname || "";
+              StaffID.value = userData.StaffID || "";
+              email.value = userData.email || "";
+              phone.value = userData.phone || "";
+            });
+          });
+      });
+    }
+
+    displayUsers();
+    function getCookie(name) {
+      const cookieName = `${name}=`;
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        if (cookie.indexOf(cookieName) === 0) {
+          return cookie.substring(cookieName.length, cookie.length);
+        }
+      }
+      return null;
+    }
+
+    // Example of how to retrieve the password
+    document.addEventListener("DOMContentLoaded", function () {
+      const librarianPassword = getCookie("librarianPassword");
+      if (librarianPassword) {
+        console.log("Librarian Password:", librarianPassword);
+      }
+    });
   </script>
 </html>
