@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ashesi - Warren Library Admin</title>
+    <script
+      src="https://kit.fontawesome.com/a3c696c988.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: "Times New Roman", sans-serif;
+        background-color: #ffffff;
+        overflow: scroll;
+      }
+
+      #navbar {
+        background-color: #a5494d;
+        padding: 10px;
+        text-align: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+      }
+
+      #logo {
+        max-height: 10%;
+        max-width: 6%;
+        float: left;
+      }
+
+      #navbar a {
+        color: white;
+        padding: 14px 16px;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      #navbar a:hover {
+        background-color: #ddd;
+        color: black;
+      }
+
+      #sidenav {
+        height: calc(100vh); /* Adjusted to use percentage */
+        width: 15%; /* Adjusted to use percentage */
+        position: fixed;
+        z-index: 0;
+        left: 2%;
+        top: 15%;
+        background-color: #ffffff;
+        border-right: 2px solid black;
+        text-align: justify;
+      }
+
+      #sidenav a {
+        padding: 15px 8px;
+        text-decoration: none;
+        font-size: 18px;
+        color: black;
+        display: block;
+      }
+
+      #sidenav a:hover {
+        color: #a5494d;
+      }
+
+      #content {
+        margin-left: 15%; /* Adjust margin to accommodate the width of the side navigation */
+        padding: 16px;
+      }
+
+      .ViewProfile {
+        width: 600px;
+        margin: 50px auto;
+        margin-top: 10%;
+        background-color: #d9d9d9; /* Grey background color for the container */
+        padding: 20px;
+        border: 2px solid #999; /* Border color for the container */
+        border-radius: 8px; /* Border radius for rounded corners */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle effect */
+        display: flex;
+        align-items: center; /* Center vertically within the container */
+      }
+
+      .profile {
+        display: flex;
+        align-items: flex-start; /* Align items to the start (top) within the profile div */
+      }
+
+      .profile img {
+        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+        margin-right: 20px;
+      }
+
+      .separator {
+        border-left: 2px solid #999; /* Border color for the separator line */
+        margin-right: 20px;
+        height: 200px; /* Adjust height to match profile image */
+      }
+
+      .info label {
+        font-weight: bold;
+        margin-bottom: 9px; /* Add space between different label-value pairs */
+        display: inline-block; /* Ensure each label-value pair is on the same line */
+        width: 90px; /* Adjust the width as needed */
+      }
+
+      #fname,
+      #lname,
+      #StaffID,
+      #email,
+      #phone {
+        background-color: #d9d9d9;
+        border: 0px;
+        font-size: 16px;
+        font-family: Times New Roman;
+      }
+
+      #EditProfile {
+        width: 180px;
+        height: 30px;
+        background-color: #a5494d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block;
+      }
+
+      #SaveProfile,
+      #Cancel {
+        width: 150px;
+        height: 30px;
+        background-color: #a5494d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-block;
+      }
+
+      #CheckIn_ {
+        margin: 50px auto;
+        margin-top: 10%;
+        margin-left: 30%;
+        padding: 10px;
+        width: 40%; /* Set a standard width for the input */
+        box-sizing: border-box;
+        margin-bottom: 5px; /* Add a little space between the input and button */
+      }
+
+      #CheckInButton,
+      #FindBook {
+        margin: 5px;
+        padding: 10px;
+        width: 150px;
+        background-color: #a5494d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #CheckOut_ {
+        margin: 50px auto;
+        margin-top: 10%;
+        margin-left: 30%;
+        padding: 10px;
+        width: 40%; /* Set a standard width for the input */
+        box-sizing: border-box;
+        margin-bottom: 5px; /* Add a little space between the input and button */
+      }
+
+      #CheckOutButton,
+      #SearchButton {
+        margin: 5px;
+        padding: 10px;
+        width: 150px;
+        background-color: #a5494d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #BookManagement {
+        text-align: center;
+        margin-top: 10%;
+      }
+      /* Style the counter cards */
+      #card,
+      #card1,
+      #card2,
+      #card3 {
+        padding: 20px;
+        width: 200px;
+        height: 150px;
+        margin: 50px auto 20px; /* 120px space at the top, 20px space at the bottom */
+        background-color: #ddd;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      #card1,
+      #card3 {
+        margin-top: -2px; /* Adjusted negative margin */
+      }
+
+      #card i,
+      #card1 i,
+      #card2 i,
+      #card3 i {
+        margin: 20px;
+        margin-bottom: 10px;
+        color: #f1f1f1;
+      }
+
+      /* Style for the form container */
+      #formContainer {
+        width: 40%;
+        margin: 50px auto;
+        margin-left: 35%;
+        padding: 20px;
+        background-color: #d3d3d3;
+        border: 2px solid #a5494d;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Style for the BookInfo form */
+      #BookInfo,
+      #WorkStudyForm,
+      #ScheduleForm {
+        text-align: center;
+      }
+
+      #BookInfo h2,
+      #WorkStudyForm h2,
+      #ScheduleForm h2 {
+        color: #a5494d;
+      }
+
+      #BookInfo label,
+      #WorkStudyForm label,
+      #ScheduleForm label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      #BookInfo input,
+      #BookInfo select {
+        width: 100%; /* Adjust width as needed */
+        padding: 8px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      #BookInfo button,
+      #CancelSave {
+        background-color: #a5494d;
+        color: white;
+        padding: 10px 80px;
+        margin-right: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-block;
+      }
+
+      #BookInfo button:hover {
+        background-color: #823e3e;
+      }
+
+      #Catalog_ {
+        margin: 50px auto;
+        margin-left: 10%;
+        padding: 10px;
+        width: 40%; /* Set a standard width for the input */
+        box-sizing: border-box;
+        margin-bottom: 5px; /* Add a little space between the input and button */
+      }
+
+      #BookSearchButton {
+        margin: 5px;
+        padding: 10px;
+        width: 150px;
+        background-color: #a5494d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #WorkStudy {
+        margin-top: 10%;
+      }
+
+      #ScheduleManagement {
+        text-align: center;
+      }
+      #card4,
+      #card5 {
+        padding: 20px;
+        width: 200px;
+        height: 150px;
+        margin: 50px auto 20px; /* 120px space at the top, 20px space at the bottom */
+        background-color: #ddd;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      #card6,
+      #card7 {
+        padding: 20px;
+        width: 200px;
+        height: 150px;
+        margin: 15px auto; /* 120px space at the top, 20px space at the bottom */
+        background-color: #ddd;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      #card4,
+      #card6 {
+        margin-right: 30px; /* Adjusted negative margin */
+      }
+
+      #card4 i,
+      #card5 i,
+      #card6 i,
+      #card7 i {
+        margin: 20px;
+        margin-bottom: 10px;
+        color: #f1f1f1;
+      }
+
+      /* Style for the form container */
+      #formContainer1,
+      #ScheduleEditing {
+        width: 20%;
+        margin: 50px auto;
+        margin-left: 35%;
+        padding: 20px;
+        background-color: #d3d3d3;
+        border: 2px solid #a5494d;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #SetCode {
+        width: 15%;
+        margin: 50px auto;
+        margin-left: 35%;
+        padding: 20px;
+        background-color: #d3d3d3;
+        border: 2px solid #a5494d;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #WorkStudyForm input,
+      #ScheduleForm input,
+      #SetCodeForm input,
+      #WorkStudyForm select,
+      #ScheduleForm select {
+        width: 80%;
+        padding: 6px; /* Adjusted padding */
+        margin-top: 3px; /* Adjusted margin */
+        margin-bottom: 8px; /* Adjusted margin */
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      #SetCodeForm input {
+        width: 90%; /* Adjusted width for responsiveness */
+        padding: 3px; /* Adjusted padding */
+        margin-top: 2px; /* Adjusted margin */
+        margin-bottom: 4px; /* Adjusted margin */
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      #WorkStudyForm button,
+      #ScheduleForm button,
+      #CancelAction,
+      #CancelEdit {
+        margin-left: 10%;
+        margin-top: 10px;
+        background-color: #a5494d;
+        color: white;
+        padding: 8px 40px; /* Adjusted padding */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-block;
+      }
+
+      #SetCodeForm button,
+      #CancelCode {
+        margin-left: 10%;
+        margin-top: 10px;
+        background-color: #a5494d;
+        color: white;
+        padding: 8px 40px; /* Adjusted padding */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-block;
+      }
+
+      #WorkStudyForm button:hover,
+      #SetCodeForm button:hover,
+      #ScheduleForm button:hover {
+        background-color: #823e3e;
+      }
+
+      .icon-container {
+        margin-right: 50%;
+        cursor: pointer;
+      }
+
+      #scheduleTable,
+      #attendanceTable,
+      #Catalog {
+        width: 80%;
+        margin-top: 10%;
+        margin: 20px auto;
+        margin-left: 20%;
+        border-collapse: collapse;
+        border: 2px solid #a5494d;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      }
+
+      #scheduleTable th,
+      #scheduleTable td,
+      #attendanceTable th,
+      #attendanceTable td,
+      #Catalog td,
+      #Catalog th {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+      }
+
+      #scheduleTable th,
+      #attendanceTable th,
+      #Catalog th {
+        background-color: #a5494d;
+        color: white;
+        font-weight: bold;
+      }
+
+      #scheduleTable tbody tr:nth-child(even),
+      #attendanceTable tbody tr:nth-child(even),
+      #Catalog tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      #scheduleTable tbody tr:hover,
+      #attendanceTable tbody tr:hover {
+        background-color: #ddd;
+      }
+
+      #PastAttendance h2 {
+        color: #a5494d;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .header-container {
+        margin-left: 20%;
+        cursor: pointer;
+      }
+
+      .header-container1,
+      .header-container2 {
+        margin-right: 56%;
+        cursor: pointer;
+      }
+
+      #SetCodeForm h2,
+      #WorkStudyForm h2,
+      #ScheduleForm h2 {
+        color: #a5494d;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      #BookInfoDisplayCheckOut,
+      #BookInfoDisplayCheckIn {
+        width: 30%;
+        text-align: center;
+        margin-top: 20px;
+        margin-left: 5%;
+        padding: 20px;
+        background-color: #ddd;
+        border: 1px solid #a5494d;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #BookInfoDisplayCheckOut p,
+      #BookInfoDisplayCheckIn p {
+        margin: 10px 0;
+      }
+
+      #BookInfoDisplayCheckOut strong,
+      #BookInfoDisplayCheckIn strong {
+        font-weight: bold;
+        margin-right: 5px;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        margin-left: 20%;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+
+      button {
+        margin-top: 10px;
+        padding: 8px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+      <img id="logo" src="OIP.jpeg" alt="School Logo" />
+      <h1 style="color: white">WARREN LIBRARY | LIBRARIAN</h1>
+    </div>
+
+    <div id="sidenav">
+      <a href="#" id="Profile_txt" onclick="toggleViewProfile()">
+        <i class="fas fa-user-alt"></i>
+        Profile
+      </a>
+
+      <a href="#" id="CheckOut_txt" onclick="toggleCheckOut()">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        Check In</a
+      >
+      <a href="#" id="CheckIn_txt" onclick="toggleCheckIn()">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        Check Out
+      </a>
+      <a href="#" id="BookManagement_txt" onclick="toggleBookManagement()">
+        <i class="fa-solid fa-book"></i>
+        Book Services</a
+      >
+      <a href="#" id="WorkStudy_txt" onclick="toggleWorkStudy()">
+        <i class="fa-solid fa-users"></i>
+        Work Study</a
+      >
+      <a
+        href="https://warrenlibraryseminarroom.simplybook.me/v2/"
+        target="_blank"
+        style="text-decoration: none"
+      >
+        <i class="fa-solid fa-house"></i>
+        Booking Room</a
+      >
+      <a
+        href="https://invence.ashesi.local:9192/user"
+        target="_blank"
+        style="text-decoration: none"
+      >
+        <i class="fa-solid fa-print"></i>
+        Web Print
+      </a>
+      <a href="booktracking.html" id="Notifications_txt" target="_blank">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        Book tracking
+      </a>
+
+      <a href="Userlogin.html">
+        <i class="fas fa-power-off"></i>
+        Log Out</a
+      >
+    </div>
+
+    <div id="ProfileViewing">
+      <div class="ViewProfile">
+        <div class="profile">
+          <img id="uploadImage" src="default-image.jpg" alt="Profile Picture" />
+          <div class="separator"></div>
+        </div>
+        <div class="info">
+          <label>First Name:</label>
+          <input type="text" id="fname" class="editable" disabled /><br />
+          <label>Last Name:</label>
+          <input type="text" id="lname" class="editable" disabled /><br />
+          <label>Email:</label>
+          <input type="email" id="email" class="editable" disabled /><br />
+          <label>Phone:</label>
+          <input type="tel" id="phone" class="editable" disabled /><br />
+          <label>Staff ID:</label>
+          <input type="number" id="StaffID" class="editable" disabled /><br />
+          <button id="EditProfile" onclick="EditProfile()">Edit Profile</button>
+          <button
+            type="submit"
+            id="SaveProfile"
+            onclick="SaveProfile()"
+            style="display: none"
+          >
+            Save Profile
+          </button>
+          <button id="Cancel" onclick="Cancel(event)" style="display: none">
+            <i class="fa-solid fa-ban"></i> Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Check In -->
+    <div id="CheckIn" style="display: none">
+      <input
+        type="text"
+        id="CheckIn_"
+        placeholder="Enter book name or RFID value"
+      />
+      <button id="FindBook">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <div style="display: flex; flex-direction: row">
+        <table>
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Book RFID</th>
+              <th>Name</th>
+              <th>Subject</th>
+              <th>Librarian</th>
+              <th>Student</th>
+              <th>Duration</th>
+              <th>Approval</th>
+            </tr>
+          </thead>
+          <tbody id="bookList"></tbody>
+        </table>
+
+        <div id="BookInfoDisplayCheckIn">
+          <h2>Book Information</h2>
+          <div id="bodyContent"></div>
+
+          <!-- <p><strong>Title:</strong> Another Book Title</p>
+              <p><strong>Author(s):</strong> Another Author Name</p>
+              <p><strong>ISBN:</strong> 0987654321</p>
+              <p><strong>Publication Year:</strong> 2021</p>
+              <p><strong>Availability:</strong> Available</p> -->
+          <label for="studentID" style="font-weight: bold">Student ID:</label>
+          <input type="text" id="studentID" name="title" /><br /><br />
+          <label for="duration" style="font-weight: bold"
+            >Borrow Duration:</label
+          >
+          <select id="duration" style="height: 20px; width: 150px" name="title">
+            <option value="" disabled selected hidden>Duration</option>
+            <option value="oneDay">1 day</option>
+            <option value="oneWeek">1 week</option>
+            <option value="thirtyDays">30 days</option>
+          </select>
+          <!-- <input type="text" id="duration" name="title" /><br /><br /> -->
+          <button onclick="editBook()" id="CheckInButton">Check In</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Check Out-->
+    <div id="CheckOut" style="display: none">
+      <input
+        type="text"
+        id="CheckOut_"
+        placeholder="Enter book name or RFID value"
+      />
+      <button id="CheckoutFindBook">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <div style="display: flex; flex-direction: row">
+        <table>
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Book RFID</th>
+              <th>Name</th>
+              <th>Subject</th>
+              <th>Librarian</th>
+              <th>Student</th>
+              <th>Duration</th>
+              <th>Approval</th>
+            </tr>
+          </thead>
+          <tbody id="CheckoutBookList"></tbody>
+        </table>
+
+        <div id="BookInfoDisplayCheckOut">
+          <h2>Book Information</h2>
+          <div id="CheckOutBodyContent"></div>
+
+          <!-- <p><strong>Title:</strong> Another Book Title</p>
+              <p><strong>Author(s):</strong> Another Author Name</p>
+              <p><strong>ISBN:</strong> 0987654321</p>
+              <p><strong>Publication Year:</strong> 2021</p>
+              <p><strong>Availability:</strong> Available</p> -->
+          <label for="CheckOutStudentID" style="font-weight: bold"
+            >Student ID:</label
+          >
+          <input type="text" id="CheckOutStudentID" name="title" /><br /><br />
+          <!-- <label for="duration" style="font-weight: bold"
+              >Borrow Duration:</label
+            > -->
+          <!-- <select id="duration" style="height: 20px; width: 150px" name="title">
+              <option value="" disabled selected hidden>Duration</option>
+              <option value="oneDay">1 day</option>
+              <option value="oneWeek">1 week</option>
+              <option value="thirtyDays">30 days</option>
+            </select> -->
+          <!-- <input type="text" id="duration" name="title" /><br /><br /> -->
+          <button onclick="CheckoutEditBook()" id="CheckOutButton">
+            Check Out
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Book management -->
+    <div id="BookManagement" style="display: none">
+      <a href="#" onclick="EnterBookInfo()" style="text-decoration: none">
+        <div id="card" style="background-color: #556b2f">
+          <i class="fa-solid fa-pencil"></i>
+          <h3 style="color: #f1f1f1">BOOK ENTRY PORTAL</h3>
+        </div>
+      </a>
+
+      <a href="#" onclick="BookSearch()" style="text-decoration: none">
+        <div id="card1" style="background-color: #b8860b">
+          <i class="fa-solid fa-file-pen"></i>
+          <h3 style="color: #f1f1f1">LIBRARY CATALOG</h3>
+        </div>
+      </a>
+
+      <div id="formContainer" style="display: none">
+        <div id="BookInfo">
+          <h2>Book Info</h2>
+          <label for="bookRFID">Book RFID:</label>
+          <input type="text" id="bookRFID" />
+
+          <label for="bookName">Name:</label>
+          <input type="text" id="bookName" />
+
+          <label for="bookSubject">Subject:</label>
+          <input type="text" id="bookSubject" />
+
+          <label for="bookAssignedLibrarian">Assigned Librarian:</label>
+          <input type="text" id="bookAssignedLibrarian" />
+
+          <label for="bookAssignedStudent">Assigned Student:</label>
+          <input type="text" id="bookAssignedStudent" />
+
+          <label for="bookAssignedDuration">Assigned Duration:</label>
+          <input type="text" id="bookAssignedDuration" />
+
+          <button onclick="addBook()">Submit</button>
+
+          <button id="CancelSave" onclick="CancelBookInfo(event)">
+            <i class="fa-solid fa-ban"></i> Cancel
+          </button>
+          <br />
+          <br />
+        </div>
+      </div>
+
+      <div id="BookEditor" style="display: none">
+        <!-- <input
+          type="text"
+          id="BookSearch"
+          placeholder="Enter book title, author, or ID"
+        />
+        <button id="BookSearchButton">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button> -->
+        <div id="ShowCatalog">
+          <div id="Catalog">
+            <input
+              type="text"
+              id="Catalog_"
+              placeholder="Enter book ID or RFID value"
+            />
+            <button id="CatalogFindBook">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <div style="display: flex; flex-direction: row">
+              <table style="margin-left: 0">
+                <thead>
+                  <tr>
+                    <th>Select</th>
+                    <th>Book RFID</th>
+                    <th>Name</th>
+                    <th>Subject</th>
+                    <th>Librarian</th>
+                    <th>Student</th>
+                    <th>Duration</th>
+                    <th>Approval</th>
+                    <th>Buzzer Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="CatalogBookList"></tbody>
+              </table>
+            </div>
+          </div>
+          <!-- <table id="Catalog">
+            <thead>
+              <tr>
+                <th>BookId</th>
+                <th>RFID tag</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publication Year</th>
+                <th>Availability Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2020167</td>
+                <td>1105</td>
+                <td>Introduction to Data Structures</td>
+                <td>Ellie Mathews</td>
+                <td>2009</td>
+                <td>Available</td>
+              </tr>
+            </tbody>
+          </table> -->
+
+          <div class="header-container2">
+            <h2
+              style="color: #a5494d; font-size: 20px"
+              onclick="goBookManagement()"
+            >
+              <u>Go Back</u>
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Work Study -->
+    <div id="WorkStudy" style="display: none">
+      <!-- Main Menu info -->
+      <a href="#" onclick="StudentInfo()" style="text-decoration: none">
+        <div id="card2" style="background-color: #483d8b">
+          <i class="fa-solid fa-user-pen"></i>
+          <h3 style="color: #f1f1f1">STUDENT MANAGEMENT</h3>
+        </div>
+      </a>
+
+      <a href="#" onclick="Schedule()" style="text-decoration: none">
+        <div id="card3" style="background-color: #a0522d">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <h3 style="color: #f1f1f1">SCHEDULE MANAGEMENT</h3>
+        </div>
+      </a>
+
+      <!-- WorkStudy Schedule Management Menu --->
+      <div id="ScheduleManagement" style="display: none">
+        <!-- WorkStudy Schedule Management Main menu subsection 1 -->
+        <div>
+          <a href="#" onclick="EditSchedule()" style="text-decoration: none">
+            <div id="card4" style="background-color: #008b8b">
+              <i class="fa-solid fa-file-pen"></i>
+              <h3 style="color: #f1f1f1">EDIT SCHEDULE</h3>
+            </div>
+          </a>
+
+          <a href="#" onclick="ViewSchedule()" style="text-decoration: none">
+            <div id="card5" style="background-color: #cd5c5c">
+              <i class="fa-solid fa-eye"></i>
+              <h3 style="color: #f1f1f1">VIEW SCHEDULE</h3>
+            </div>
+          </a>
+        </div>
+
+        <!-- WorkStudy Schedule Management Main menu subsection 2 -->
+        <div>
+          <a href="#" onclick="Attendance()" style="text-decoration: none">
+            <div id="card6" style="background-color: #228b22">
+              <i class="fa-solid fa-check-to-slot"></i>
+              <h3 style="color: #f1f1f1">ATTENDANCE</h3>
+            </div>
+          </a>
+
+          <a href="#" onclick="AttendanceCode()" style="text-decoration: none">
+            <div id="card7" style="background-color: #808080">
+              <i class="fa-solid fa-key"></i>
+              <h3 style="color: #f1f1f1">ATTENDANCE CODE</h3>
+            </div>
+          </a>
+        </div>
+
+        <div class="icon-container">
+          <i
+            class="fa-solid fa-backward"
+            style="color: #a5494d; font-size: 40px"
+            onclick="goBack()"
+          ></i>
+        </div>
+      </div>
+
+      <!-- Work Study account (de)activation -->
+      <div id="formContainer1" style="display: none">
+        <form action="#" method="post" id="WorkStudyForm">
+          <h2 style="color: #a5494d">Work Study Account Management</h2>
+          <label for="action">Action:</label>
+          <select id="action" name="action">
+            <option value="available">Activation</option>
+            <option value="checked-out">Deactivation</option></select
+          ><br /><br />
+
+          <label for="StudentEmail">Student Email:</label>
+          <input type="email" id="StudentEmail" name="student email" />
+
+          <button type="submit">Submit</button>
+          <button id="CancelAction" onclick="Action(event)">
+            <i class="fa-solid fa-ban"></i> Cancel</button
+          ><br /><br />
+        </form>
+      </div>
+
+      <!-- Work Study schedule editing -->
+      <div id="ScheduleEditing" style="display: none">
+        <form action="#" method="post" id="ScheduleForm">
+          <h2 style="color: #a5494d">Work Study Schedule</h2>
+          <label for="type">Shift Type:</label>
+          <select id="type" name="type">
+            <option value="available">Morning</option>
+            <option value="available">AfterNoon</option>
+            <option value="checked-out">Evening</option>
+          </select>
+
+          <label for="startTime">From:</label>
+          <input
+            type="time"
+            id="startTime"
+            name="start_time"
+            min="08:00"
+            max="23:59"
+          />
+          <label for="endTime">To:</label>
+          <input
+            type="time"
+            id="endTime"
+            name="end_time"
+            min="08:00"
+            max="23:59"
+          />
+
+          <label for="supervisor">Supervisor:</label>
+          <input type="text" id="supervisor" name="title" />
+
+          <label for="emailInput">Student Email:</label>
+          <input type="email" id="emailInput" name="emailInput" />
+
+          <button type="submit">Submit</button>
+          <button id="CancelEdit" onclick="PreviousPage(event)">
+            <i class="fa-solid fa-ban"></i> Cancel</button
+          ><br /><br />
+        </form>
+      </div>
+
+      <div id="ViewSchedule" style="display: none">
+        <table id="scheduleTable">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Student Email</th>
+              <th>Date</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Supervisor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>11112024</td>
+              <td>john.doe@example.com</td>
+              <td>2023-12-10</td>
+              <td>9:00 AM</td>
+              <td>12:00 PM</td>
+              <td>Victor Ibetto</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="header-container">
+          <h2
+            style="color: #a5494d; font-size: 20px"
+            onclick="goScheduleManagement()"
+          >
+            <u>Go Back</u>
+          </h2>
+        </div>
+      </div>
+
+      <div id="PastAttendance" style="display: none">
+        <h2>Attendance History:</h2>
+        <table id="attendanceTable">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Student Email</th>
+              <th>Date</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Attendance time</th>
+              <th>Supervisor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>11112024</td>
+              <td>john.doe@example.com</td>
+              <td>2023-12-10</td>
+              <td>9:00 AM</td>
+              <td>12:00 PM</td>
+              <td>9:05 AM</td>
+              <td>Victor Ibetto</td>
+            </tr>
+            <!-- Add more rows as needed -->
+          </tbody>
+        </table>
+        <div class="header-container1">
+          <h2
+            style="color: #a5494d; font-size: 20px"
+            onclick="goScheduleManagement1()"
+          >
+            <u>Go Back</u>
+          </h2>
+        </div>
+      </div>
+    </div>
+
+    <div id="SetCode" style="display: none">
+      <form action="#" method="post" id="SetCodeForm">
+        <h2 style="color: #a5494d">Set Work Study Attendance Code</h2>
+        <label for="start">Start:</label>
+        <input
+          type="time"
+          id="start"
+          name="start_time"
+          min="08:00"
+          max="23:59"
+        />
+        <label for="end">Stop:</label>
+        <input type="time" id="end" name="end_time" min="08:00" max="23:59" />
+
+        <label for="StudentEmail">Code:</label>
+        <input type="email" id="AttendanceCode" name="student email" />
+
+        <button type="submit">Submit</button>
+        <button id="CancelCode" onclick="GoPrevious(event)">
+          <i class="fa-solid fa-ban"></i> Cancel</button
+        ><br /><br />
+      </form>
+    </div>
+
+    <script>
+      let prevActiveItemID = "ProfileViewing";
+      let prevActiveTextID = "Profile_txt";
+      document.getElementById(prevActiveTextID).style.color = "#A5494D";
+
+      function toggleMenu(contentID, clickedElement) {
+        var activeItem = document.getElementById(contentID);
+        var clickedText = document.getElementById(clickedElement);
+
+        if (prevActiveItemID) {
+          document.getElementById(prevActiveItemID).style.display = "none";
+          document.getElementById(prevActiveTextID).style.color = "black";
+        }
+
+        activeItem.style.display =
+          activeItem.style.display === "none" || activeItem.style.display === ""
+            ? "block"
+            : "none";
+
+        if (activeItem.style.display === "block") {
+          clickedText.style.color = "#A5494D";
+        }
+
+        prevActiveItemID = contentID;
+        prevActiveTextID = clickedElement;
+      }
+
+      function toggleViewProfile() {
+        toggleMenu("ProfileViewing", "Profile_txt");
+      }
+
+      function toggleBookManagement() {
+        toggleMenu("BookManagement", "BookManagement_txt");
+      }
+
+      function toggleCheckIn() {
+        toggleMenu("CheckIn", "CheckIn_txt");
+      }
+
+      function toggleCheckOut() {
+        toggleMenu("CheckOut", "CheckOut_txt");
+      }
+
+      function toggleWorkStudy() {
+        toggleMenu("WorkStudy", "WorkStudy_txt");
+      }
+
+      function EnterBookInfo() {
+        document.getElementById("card").style.display = "none";
+        document.getElementById("card1").style.display = "none";
+        document.getElementById("formContainer").style.display = "block";
+      }
+
+      function CancelBookInfo(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+        document.getElementById("card").style.display = "block";
+        document.getElementById("card1").style.display = "block";
+        document.getElementById("formContainer").style.display = "none";
+      }
+
+      function Schedule() {
+        document.getElementById("card2").style.display = "none";
+        document.getElementById("card3").style.display = "none";
+        document.getElementById("ScheduleManagement").style.display = "block";
+      }
+
+      function StudentInfo() {
+        document.getElementById("card2").style.display = "none";
+        document.getElementById("card3").style.display = "none";
+        document.getElementById("formContainer1").style.display = "block";
+      }
+
+      function Action(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+        document.getElementById("card2").style.display = "block";
+        document.getElementById("card3").style.display = "block";
+        document.getElementById("formContainer1").style.display = "none";
+      }
+
+      function EditSchedule() {
+        document.getElementById("card4").style.display = "none";
+        document.getElementById("card5").style.display = "none";
+        document.getElementById("card6").style.display = "none";
+        document.getElementById("card7").style.display = "none";
+        document.getElementById("ScheduleEditing").style.display = "block";
+        document.querySelector(".icon-container").style.display = "none";
+      }
+
+      function PreviousPage(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+        document.getElementById("card7").style.display = "inline-block";
+        document.getElementById("card6").style.display = "inline-block";
+        document.getElementById("card5").style.display = "inline-block";
+        document.getElementById("card4").style.display = "inline-block";
+        document.getElementById("ScheduleEditing").style.display = "none";
+        document.querySelector(".icon-container").style.display = "block";
+      }
+
+      function BookSearch() {
+        document.getElementById("card").style.display = "none";
+        document.getElementById("card1").style.display = "none";
+        document.getElementById("BookEditor").style.display = "block";
+      }
+
+      function goBookManagement() {
+        document.getElementById("card").style.display = "block";
+        document.getElementById("card1").style.display = "block";
+        document.getElementById("BookEditor").style.display = "none";
+      }
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCzSMSm6ZHGoLGA7AToiIMHByDFz9yIIbk",
+        authDomain: "ashesilibraryesp32-fd5b8.firebaseapp.com",
+        databaseURL:
+          "https://ashesilibraryesp32-fd5b8-default-rtdb.firebaseio.com",
+        projectId: "ashesilibraryesp32-fd5b8",
+        storageBucket: "ashesilibraryesp32-fd5b8.appspot.com",
+        messagingSenderId: "185836313770",
+        appId: "1:185836313770:web:ff9137a24273f2ed0844d3",
+        measurementId: "G-J8PWV52BJE",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+
+      function EditProfile() {
+        var inputs = document.querySelectorAll(".editable[disabled]");
+        // Loop through each input and enable it
+        inputs.forEach(function (input) {
+          input.removeAttribute("disabled");
+          input.style.border = "1px solid #A5494D"; // Set border style using JavaScript
+        });
+
+        document.getElementById("EditProfile").style.display = "none";
+        document.getElementById("SaveProfile").style.display = "inline-block";
+        document.getElementById("Cancel").style.display = "inline-block";
+      }
+
+      function SaveProfile() {
+        var fname = document.getElementById("fname").value;
+        var lname = document.getElementById("lname").value;
+        var StaffID = document.getElementById("StaffID").value;
+        var email = document.getElementById("email").value;
+        var phone = document.getElementById("phone").value;
+
+        // Assuming you have a user ID, you need to replace "userID" with the actual user ID
+        var userID = "userID";
+
+        database.ref(`Librarians/${userID}`).update({
+          fname: fname,
+          lname: lname,
+          StaffID: StaffID,
+          email: email,
+          phone: phone,
+        });
+
+        // Display users after saving profile
+        displayUsers();
+
+        // Disable inputs after saving
+        var inputs = document.querySelectorAll(".editable:not([disabled])");
+        inputs.forEach(function (input) {
+          input.setAttribute("disabled", "disabled");
+          input.style.border = "0";
+        });
+
+        document.getElementById("EditProfile").style.display = "block";
+        document.getElementById("SaveProfile").style.display = "none";
+        document.getElementById("Cancel").style.display = "none";
+      }
+
+      function Cancel(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+        document.getElementById("EditProfile").style.display = "block";
+        document.getElementById("SaveProfile").style.display = "none";
+        document.getElementById("Cancel").style.display = "none";
+
+        var inputs = document.querySelectorAll(".editable:not([disabled])");
+        inputs.forEach(function (input) {
+          input.setAttribute("disabled", "disabled");
+          input.style.border = "0";
+        });
+      }
+
+      function editUser(userType, userID, userEmail) {
+        const newEmail = window.prompt(
+          `Current Email: ${userEmail}\nEnter new Email:`
+        );
+
+        if (newEmail !== null) {
+          database.ref(`${userType}s/${userID}`).update({
+            email: newEmail,
+          });
+
+          displayUsers();
+        }
+      }
+
+      function displayUsers() {
+        const fname = document.getElementById("fname");
+        const lname = document.getElementById("lname");
+        const StaffID = document.getElementById("StaffID");
+        const email = document.getElementById("email");
+        const phone = document.getElementById("phone");
+
+        const userTypes = ["Librarian"];
+        userTypes.forEach((userType) => {
+          database
+            .ref(`${userType}s`)
+            .once("value")
+            .then((snapshot) => {
+              snapshot.forEach((user) => {
+                const userData = user.val();
+                fname.value = userData.fname || "";
+                lname.value = userData.lname || "";
+                StaffID.value = userData.StaffID || "";
+                email.value = userData.email || "";
+                phone.value = userData.phone || "";
+              });
+            });
+        });
+      }
+
+      displayUsers();
+
+      let selectedBookKeys = [];
+
+      function displayBooks() {
+        const bookListTable = document.getElementById("bookList");
+        bookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              // Use unique IDs for each checkbox
+              const checkboxId = `CheckBox_${book.key}`;
+              row.innerHTML = `
+      <td><input type="checkbox" id="${checkboxId}" onchange="updateSelectedBooks('${book.key}')"/></td>
+      <td>${book.key}</td>
+      <td>${bookData.name}</td>
+      <td>${bookData.subject}</td>
+      <td>${bookData.assignedLibrarian}</td>
+      <td>${bookData.assignedStudent}</td>
+      <td>${bookData.assignedDuration}</td>
+      <td>${bookData.approval}</td>
+
+    `;
+              bookListTable.appendChild(row);
+            });
+          });
+      }
+
+      // Update the array of selected book keys
+      function updateSelectedBooks(bookKey) {
+        const checkbox = document.getElementById(`CheckBox_${bookKey}`);
+        if (checkbox.checked) {
+          // Add the book key to the array
+          selectedBookKeys.push(bookKey);
+          displayCard();
+        } else {
+          // Remove the book key from the array
+          selectedBookKeys = selectedBookKeys.filter((key) => key !== bookKey);
+          displayCard();
+        }
+      }
+
+      function editBook() {
+        console.log(selectedBookKeys);
+        for (let i = 0; i < selectedBookKeys.length; i++) {
+          const bookRFID = selectedBookKeys[i];
+          const assignedStudent = document.getElementById("studentID").value;
+          const assignedDuration = document.getElementById("duration").value;
+
+          const newApproval = "True";
+          const assignedLibrarian = "TestLibrarian";
+
+          if (assignedStudent && assignedDuration) {
+            database.ref(`LibraryRecords/${bookRFID}`).update({
+              assignedStudent: assignedStudent,
+              assignedDuration: assignedDuration,
+              assignedLibrarian: assignedLibrarian,
+              approval: newApproval.toLowerCase() === "true",
+            });
+
+            // Assuming displayBooks is a function to update the UI, you may call it here
+          } else {
+            alert("Please enter a valid student ID and duration");
+          }
+        }
+        displayBooks();
+        displayCard();
+      }
+      function displayCard() {
+        const cardValue = document.getElementById("bodyContent");
+        cardValue.innerHTML = "";
+
+        // Display information only for the selected books
+        selectedBookKeys.forEach((bookKey) => {
+          database
+            .ref(`LibraryRecords/${bookKey}`)
+            .once("value")
+            .then((snapshot) => {
+              const bookData = snapshot.val();
+              const row = document.createElement("div");
+              row.innerHTML = `
+      <p id="bookRFID"><strong>bookRFID:</strong> ${bookKey}</p>
+      <p id="bookName"><strong>bookName:</strong> ${bookData.name}</p>
+      <p id="bookSubject"><strong>bookSubject:</strong> ${bookData.subject}</p>
+      <p id="approval"><strong>approval:</strong> ${bookData.approval}</p>
+    `;
+              cardValue.appendChild(row);
+            });
+        });
+      }
+
+      function displayBooks() {
+        const bookListTable = document.getElementById("bookList");
+        const filterInput = document
+          .getElementById("CheckIn_")
+          .value.toLowerCase(); // Get the filter input value
+
+        bookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              const bookName = bookData.name.toLowerCase(); // Convert book name to lowercase for case-insensitive search
+              const bookRFID = book.key.toLowerCase(); // Convert book RFID to lowercase for case-insensitive search
+
+              // Check if the filterInput is empty or matches the book name or RFID
+              if (
+                (filterInput === "" ||
+                  bookName.includes(filterInput) ||
+                  bookRFID.includes(filterInput)) &&
+                !bookData.approval // Check if approval is false
+              ) {
+                const checkboxId = `CheckBox_${book.key}`;
+                row.innerHTML = `
+            <td><input type="checkbox" id="${checkboxId}" onchange="updateSelectedBooks('${book.key}')"/></td>
+            <td>${book.key}</td>
+            <td>${bookData.name}</td>
+            <td>${bookData.subject}</td>
+            <td>${bookData.assignedLibrarian}</td>
+            <td>${bookData.assignedStudent}</td>
+            <td>${bookData.assignedDuration}</td>
+            <td>${bookData.approval}</td>
+          `;
+                bookListTable.appendChild(row);
+              }
+            });
+          });
+      }
+
+      // Add an event listener for the FindBook button to trigger the displayBooks function
+      document
+        .getElementById("FindBook")
+        .addEventListener("click", displayBooks);
+
+      displayBooks();
+      displayCard();
+
+      let CheckoutSelectedBookKeys = [];
+
+      function CheckoutDisplayBooks() {
+        const CheckoutBookListTable =
+          document.getElementById("CheckoutBookList");
+        CheckoutBookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              // Use unique IDs for each checkbox
+              const checkboxId = `CheckBox_${book.key}`;
+              row.innerHTML = `
+          <td><input type="checkbox" id="${checkboxId}" onchange="CheckoutUpdateSelectedBooks('${book.key}')"/></td>
+          <td>${book.key}</td>
+          <td>${bookData.name}</td>
+          <td>${bookData.subject}</td>
+          <td>${bookData.assignedLibrarian}</td>
+          <td>${bookData.assignedStudent}</td>
+          <td>${bookData.assignedDuration}</td>
+          <td>${bookData.approval}</td>
+
+        `;
+              CheckoutBookListTable.appendChild(row);
+            });
+          });
+      }
+
+      // Update the array of selected book keys
+      function CheckoutUpdateSelectedBooks(bookKey) {
+        const checkbox = document.getElementById(`CheckBox_${bookKey}`);
+        if (checkbox.checked) {
+          // Add the book key to the array
+          CheckoutSelectedBookKeys.push(bookKey);
+          CheckoutDisplayCard();
+        } else {
+          // Remove the book key from the array
+          CheckoutSelectedBookKeys = CheckoutSelectedBookKeys.filter(
+            (key) => key !== bookKey
+          );
+          CheckoutDisplayCard();
+        }
+      }
+
+      function CheckoutEditBook() {
+        console.log(CheckoutSelectedBookKeys);
+        for (let i = 0; i < CheckoutSelectedBookKeys.length; i++) {
+          const bookRFID = CheckoutSelectedBookKeys[i];
+          const assignedStudent =
+            document.getElementById("CheckOutStudentID").value;
+          const assignedDuration = "N/A";
+
+          const newApproval = "false";
+          const assignedLibrarian = "TestLibrarian";
+
+          if (assignedStudent && assignedDuration) {
+            database.ref(`LibraryRecords/${bookRFID}`).update({
+              assignedStudent: assignedStudent,
+              assignedDuration: assignedDuration,
+              assignedLibrarian: assignedLibrarian,
+              approval: newApproval.toLowerCase() === "true",
+            });
+
+            // Assuming CheckoutDisplayBooks is a function to update the UI, you may call it here
+          } else {
+            alert("Please enter a valid student ID and duration");
+          }
+        }
+        CheckoutDisplayBooks();
+        CheckoutDisplayCard();
+      }
+      function CheckoutDisplayCard() {
+        const cardValue = document.getElementById("CheckOutBodyContent");
+        cardValue.innerHTML = "";
+
+        // Display information only for the selected books
+        CheckoutSelectedBookKeys.forEach((bookKey) => {
+          database
+            .ref(`LibraryRecords/${bookKey}`)
+            .once("value")
+            .then((snapshot) => {
+              const bookData = snapshot.val();
+              const row = document.createElement("div");
+              row.innerHTML = `
+          <p id="bookRFID"><strong>bookRFID:</strong> ${bookKey}</p>
+          <p id="bookName"><strong>bookName:</strong> ${bookData.name}</p>
+          <p id="bookSubject"><strong>bookSubject:</strong> ${bookData.subject}</p>
+          <p id="approval"><strong>approval:</strong> ${bookData.approval}</p>
+        `;
+              cardValue.appendChild(row);
+            });
+        });
+      }
+
+      function CheckoutDisplayBooks() {
+        const CheckoutBookListTable =
+          document.getElementById("CheckoutBookList");
+        const filterInput = document
+          .getElementById("CheckOut_")
+          .value.toLowerCase(); // Get the filter input value
+
+        CheckoutBookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              const bookName = bookData.name.toLowerCase(); // Convert book name to lowercase for case-insensitive search
+              const bookRFID = book.key.toLowerCase(); // Convert book RFID to lowercase for case-insensitive search
+
+              // Check if the filterInput is empty or matches the book name or RFID
+              if (
+                (filterInput === "" ||
+                  bookName.includes(filterInput) ||
+                  bookRFID.includes(filterInput)) &&
+                bookData.approval
+              ) {
+                const checkboxId = `CheckBox_${book.key}`;
+                row.innerHTML = `
+            <td><input type="checkbox" id="${checkboxId}" onchange="CheckoutUpdateSelectedBooks('${book.key}')"/></td>
+            <td>${book.key}</td>
+            <td>${bookData.name}</td>
+            <td>${bookData.subject}</td>
+            <td>${bookData.assignedLibrarian}</td>
+            <td>${bookData.assignedStudent}</td>
+            <td>${bookData.assignedDuration}</td>
+            <td>${bookData.approval}</td>
+          `;
+                CheckoutBookListTable.appendChild(row);
+              }
+            });
+          });
+      }
+
+      // Add an event listener for the CheckoutFindBook button to trigger the CheckoutDisplayBooks function
+      document
+        .getElementById("CheckoutFindBook")
+        .addEventListener("click", CheckoutDisplayBooks);
+
+      CheckoutDisplayBooks();
+      CheckoutDisplayCard();
+
+      let CatalogSelectedBookKeys = [];
+
+      function CatalogDisplayBooks() {
+        const CatalogBookListTable = document.getElementById("CatalogBookList");
+        CatalogBookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                        <td>${book.key}</td>
+                        <td>${bookData.name}</td>
+                        <td>${bookData.subject}</td>
+                        <td>${bookData.assignedLibrarian}</td>
+                        <td>${bookData.assignedStudent}</td>
+                        <td>${bookData.assignedDuration}</td>
+                        <td>${bookData.approval}</td>
+                        <td>${bookData.buzzerStatus}</td>
+                        <td>
+                          <button onclick="CatalogEditBook('${book.key}', '${bookData.name}', '${bookData.subject}', '${bookData.assignedLibrarian}', '${bookData.assignedStudent}', '${bookData.assignedDuration}', ${bookData.approval}, ${bookData.buzzerStatus})">Edit</button>
+                          <button onclick="deleteBook('${book.key}')">Delete</button>
+                        </td>
+                    `;
+              bookListTable.appendChild(row);
+            });
+          });
+      }
+
+      // Update the array of selected book keys
+      function CatalogUpdateSelectedBooks(bookKey) {
+        const checkbox = document.getElementById(`CheckBox_${bookKey}`);
+        if (checkbox.checked) {
+          // Add the book key to the array
+          CatalogSelectedBookKeys.push(bookKey);
+          CatalogDisplayCard();
+        } else {
+          // Remove the book key from the array
+          CatalogSelectedBookKeys = CatalogSelectedBookKeys.filter(
+            (key) => key !== bookKey
+          );
+          CatalogDisplayCard();
+        }
+      }
+
+      function CatalogEditBook() {
+        console.log(CatalogSelectedBookKeys);
+        for (let i = 0; i < CatalogSelectedBookKeys.length; i++) {
+          const bookRFID = CatalogSelectedBookKeys[i];
+          const assignedStudent =
+            document.getElementById("CatalogStudentID").value;
+          const assignedDuration = "N/A";
+
+          const newApproval = "false";
+          const assignedLibrarian = "TestLibrarian";
+
+          if (assignedStudent && assignedDuration) {
+            database.ref(`LibraryRecords/${bookRFID}`).update({
+              assignedStudent: assignedStudent,
+              assignedDuration: assignedDuration,
+              assignedLibrarian: assignedLibrarian,
+              approval: newApproval.toLowerCase() === "true",
+            });
+
+            // Assuming CatalogDisplayBooks is a function to update the UI, you may call it here
+          } else {
+            alert("Please enter a valid student ID and duration");
+          }
+        }
+        CatalogDisplayBooks();
+        CatalogDisplayCard();
+      }
+      function CatalogDisplayCard() {
+        const cardValue = document.getElementById("CatalogBodyContent");
+        cardValue.innerHTML = "";
+
+        // Display information only for the selected books
+        CatalogSelectedBookKeys.forEach((bookKey) => {
+          database
+            .ref(`LibraryRecords/${bookKey}`)
+            .once("value")
+            .then((snapshot) => {
+              const bookData = snapshot.val();
+              const row = document.createElement("div");
+              row.innerHTML = `
+      <p id="bookRFID"><strong>bookRFID:</strong> ${bookKey}</p>
+      <p id="bookName"><strong>bookName:</strong> ${bookData.name}</p>
+      <p id="bookSubject"><strong>bookSubject:</strong> ${bookData.subject}</p>
+      <p id="approval"><strong>approval:</strong> ${bookData.approval}</p>
+    `;
+              cardValue.appendChild(row);
+            });
+        });
+      }
+      function deleteBook(bookRFID) {
+        if (
+          confirm(
+            `Are you sure you want to delete the book with RFID: ${bookRFID}?`
+          )
+        ) {
+          database.ref(`LibraryRecords/${bookRFID}`).remove();
+          displayBooks();
+        }
+      }
+
+      function CatalogEditBook(
+        bookRFID,
+        currentName,
+        currentSubject,
+        currentApproval,
+        currentassignedDuration,
+        currentassignedStudent,
+        currentassignedLibrarian,
+        currentBuzzerStatus
+      ) {
+        const newName = prompt(`Current Name: ${currentName}\nEnter new Name:`);
+        const newSubject = prompt(
+          `Current Subject: ${currentSubject}\nEnter new Subject:`
+        );
+        const newApproval = prompt(
+          `Current Approval: ${currentApproval}\nEnter new Approval:`
+        );
+        const newBuzzerStatus = prompt(
+          `Current Buzzer Status: ${currentBuzzerStatus}\nEnter new Buzzer Status:`
+        );
+
+        const assignedDuration = prompt(
+          `Current borrow time allowance: ${currentassignedDuration}\nEnter new time allowance:`
+        );
+
+        const assignedStudent = prompt(
+          `Current assigned student: ${currentassignedStudent}\nNew student name:`
+        );
+
+        const assignedLibrarian = prompt(
+          `Current assigned librarian: ${currentassignedLibrarian}\nNew Librarian Name:`
+        );
+
+        if (
+          newName !== null &&
+          newSubject !== null &&
+          newApproval !== null &&
+          newBuzzerStatus !== null
+        ) {
+          database.ref(`LibraryRecords/${bookRFID}`).update({
+            name: newName,
+            subject: newSubject,
+            assignedLibrarian: assignedLibrarian,
+            assignedStudent: assignedStudent,
+            assignedDuration: assignedDuration,
+            approval: newApproval.toLowerCase() === "true", // Convert to boolean
+            buzzerStatus: newBuzzerStatus.toLowerCase() === "true", // Convert to boolean
+          });
+
+          displayBooks();
+        }
+      }
+
+      function deleteBook(bookRFID) {
+        if (
+          confirm(
+            `Are you sure you want to delete the book with RFID: ${bookRFID}?`
+          )
+        ) {
+          database.ref(`LibraryRecords/${bookRFID}`).remove();
+          displayBooks();
+        }
+      }
+
+      function CatalogDisplayBooks() {
+        const CatalogBookListTable = document.getElementById("CatalogBookList");
+        const filterInput = document
+          .getElementById("Catalog_")
+          .value.toLowerCase(); // Get the filter input value
+
+        CatalogBookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              const bookName = bookData.name.toLowerCase(); // Convert book name to lowercase for case-insensitive search
+              const bookRFID = book.key.toLowerCase(); // Convert book RFID to lowercase for case-insensitive search
+
+              // Check if the filterInput is empty or matches the book name or RFID
+              if (
+                filterInput === "" ||
+                bookName.includes(filterInput) ||
+                bookRFID.includes(filterInput)
+              ) {
+                const checkboxId = `CheckBox_${book.key}`;
+                row.innerHTML = `
+        <td><input type="checkbox" id="${checkboxId}" onchange="CatalogUpdateSelectedBooks('${book.key}')"/></td>
+        <td>${book.key}</td>
+        <td>${bookData.name}</td>
+        <td>${bookData.subject}</td>
+        <td>${bookData.assignedLibrarian}</td>
+        <td>${bookData.assignedStudent}</td>
+                        <td>${bookData.assignedDuration}</td>
+                        <td>${bookData.approval}</td>
+                        <td>${bookData.buzzerStatus}</td>
+                        <td>
+                          <button onclick="CatalogEditBook('${book.key}', '${bookData.name}', '${bookData.subject}', '${bookData.assignedLibrarian}', '${bookData.assignedStudent}', '${bookData.assignedDuration}', ${bookData.approval}, ${bookData.buzzerStatus})">Edit</button>
+                          <button onclick="deleteBook('${book.key}')">Delete</button>
+                        </td>
+      `;
+                CatalogBookListTable.appendChild(row);
+              }
+            });
+          });
+      }
+
+      // Add an event listener for the CatalogFindBook button to trigger the CatalogDisplayBooks function
+      document
+        .getElementById("CatalogFindBook")
+        .addEventListener("click", CatalogDisplayBooks);
+
+      CatalogDisplayBooks();
+      CatalogDisplayCard();
+      function addBook() {
+        const bookRFID = document.getElementById("bookRFID").value;
+        const bookName = document.getElementById("bookName").value;
+        const bookSubject = document.getElementById("bookSubject").value;
+        const bookAssignedLibrarian = document.getElementById(
+          "bookAssignedLibrarian"
+        ).value;
+        const bookAssignedStudent = document.getElementById(
+          "bookAssignedStudent"
+        ).value;
+        const bookAssignedDuration = document.getElementById(
+          "bookAssignedDuration"
+        ).value;
+
+        if (
+          !bookRFID ||
+          !bookName ||
+          !bookSubject ||
+          !bookAssignedLibrarian ||
+          !bookAssignedStudent ||
+          !bookAssignedDuration
+        ) {
+          alert("Please enter valid information for all fields");
+          return;
+        }
+
+        database
+          .ref(`LibraryRecords/${bookRFID}`)
+          .set({
+            name: bookName,
+            subject: bookSubject,
+            assignedLibrarian: bookAssignedLibrarian,
+            assignedStudent: bookAssignedStudent,
+            assignedDuration: bookAssignedDuration,
+            approval: false,
+            buzzerStatus: false,
+          })
+          .then(() => {
+            // Data successfully written to the database
+            console.log("Book added successfully!");
+            document.getElementById("bookRFID").value = "";
+            document.getElementById("bookName").value = "";
+            document.getElementById("bookSubject").value = "";
+            document.getElementById("bookAssignedLibrarian").value = "";
+            document.getElementById("bookAssignedStudent").value = "";
+            document.getElementById("bookAssignedDuration").value = "";
+          })
+          .catch((error) => {
+            // Handle errors during database write
+            console.error("Error adding book:", error);
+            alert("Error adding book. Please check the console for details.");
+          });
+      }
+      function goBack() {
+        document.getElementById("card2").style.display = "flex";
+        document.getElementById("card3").style.display = "flex";
+        document.getElementById("ScheduleManagement").style.display = "none";
+      }
+
+      function ViewSchedule() {
+        document.getElementById("card4").style.display = "none";
+        document.getElementById("card5").style.display = "none";
+        document.getElementById("card6").style.display = "none";
+        document.getElementById("card7").style.display = "none";
+        document.getElementById("ViewSchedule").style.display = "block";
+        document.querySelector(".icon-container").style.display = "none";
+      }
+
+      function Attendance() {
+        document.getElementById("card4").style.display = "none";
+        document.getElementById("card5").style.display = "none";
+        document.getElementById("card6").style.display = "none";
+        document.getElementById("card7").style.display = "none";
+        document.getElementById("PastAttendance").style.display = "block";
+        document.querySelector(".icon-container").style.display = "none";
+      }
+
+      function goScheduleManagement() {
+        document.getElementById("card4").style.display = "inline-block";
+        document.getElementById("card5").style.display = "inline-block";
+        document.getElementById("card6").style.display = "inline-block";
+        document.getElementById("card7").style.display = "inline-block";
+        document.getElementById("ViewSchedule").style.display = "none";
+        document.querySelector(".header-container").style.display = "block";
+        document.querySelector(".icon-container").style.display = "block";
+      }
+
+      function goScheduleManagement1() {
+        document.getElementById("card4").style.display = "inline-block";
+        document.getElementById("card5").style.display = "inline-block";
+        document.getElementById("card6").style.display = "inline-block";
+        document.getElementById("card7").style.display = "inline-block";
+        document.getElementById("PastAttendance").style.display = "none";
+        document.querySelector(".header-container1").style.display = "block";
+        document.querySelector(".icon-container").style.display = "block";
+      }
+
+      function AttendanceCode() {
+        document.getElementById("card4").style.display = "none";
+        document.getElementById("card5").style.display = "none";
+        document.getElementById("card6").style.display = "none";
+        document.getElementById("card7").style.display = "none";
+        document.getElementById("SetCode").style.display = "block";
+        document.querySelector(".icon-container").style.display = "none";
+      }
+
+      function GoPrevious(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+        document.getElementById("card4").style.display = "inline-block";
+        document.getElementById("card5").style.display = "inline-block";
+        document.getElementById("card6").style.display = "inline-block";
+        document.getElementById("card7").style.display = "inline-block";
+        document.getElementById("SetCode").style.display = "none";
+        document.querySelector(".icon-container").style.display = "block";
+      }
+    </script>
+  </body>
+</html>

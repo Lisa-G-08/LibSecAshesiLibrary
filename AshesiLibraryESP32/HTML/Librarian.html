@@ -291,7 +291,7 @@
         background-color: #823e3e;
       }
 
-      #BookSearch {
+      #Catalog_ {
         margin: 50px auto;
         margin-left: 10%;
         padding: 10px;
@@ -789,46 +789,76 @@
       </a>
 
       <div id="formContainer" style="display: none">
-        <form action="#" method="post" id="BookInfo">
+        <div id="BookInfo">
           <h2>Book Info</h2>
-          <label for="title">Title:</label>
-          <input type="text" id="title" name="title" />
+          <label for="bookRFID">Book RFID:</label>
+          <input type="text" id="bookRFID" />
 
-          <label for="authors">Author(s):</label>
-          <input type="text" id="authors" name="authors" />
+          <label for="bookName">Name:</label>
+          <input type="text" id="bookName" />
 
-          <label for="isbn">ISBN:</label>
-          <input type="text" id="isbn" name="isbn" />
+          <label for="bookSubject">Subject:</label>
+          <input type="text" id="bookSubject" />
 
-          <label for="publicationYear">Publication Year:</label>
-          <input type="number" id="publicationYear" name="publicationYear" />
+          <label for="bookAssignedLibrarian">Assigned Librarian:</label>
+          <input type="text" id="bookAssignedLibrarian" />
 
-          <label for="availability">Availability:</label>
-          <select id="availability" name="availability">
-            <option value="available">Available</option>
-            <option value="checked-out">Checked Out</option></select
-          ><br /><br />
+          <label for="bookAssignedStudent">Assigned Student:</label>
+          <input type="text" id="bookAssignedStudent" />
 
-          <button type="submit">Submit</button>
+          <label for="bookAssignedDuration">Assigned Duration:</label>
+          <input type="text" id="bookAssignedDuration" />
+
+          <button onclick="addBook()">Submit</button>
+
           <button id="CancelSave" onclick="CancelBookInfo(event)">
             <i class="fa-solid fa-ban"></i> Cancel
           </button>
           <br />
           <br />
-        </form>
+        </div>
       </div>
 
       <div id="BookEditor" style="display: none">
-        <input
+        <!-- <input
           type="text"
           id="BookSearch"
           placeholder="Enter book title, author, or ID"
         />
         <button id="BookSearchButton">
           <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
+        </button> -->
         <div id="ShowCatalog">
-          <table id="Catalog">
+          <div id="Catalog">
+            <input
+              type="text"
+              id="Catalog_"
+              placeholder="Enter book ID or RFID value"
+            />
+            <button id="CatalogFindBook">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <div style="display: flex; flex-direction: row">
+              <table style="margin-left: 0">
+                <thead>
+                  <tr>
+                    <th>Select</th>
+                    <th>Book RFID</th>
+                    <th>Name</th>
+                    <th>Subject</th>
+                    <th>Librarian</th>
+                    <th>Student</th>
+                    <th>Duration</th>
+                    <th>Approval</th>
+                    <th>Buzzer Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="CatalogBookList"></tbody>
+              </table>
+            </div>
+          </div>
+          <!-- <table id="Catalog">
             <thead>
               <tr>
                 <th>BookId</th>
@@ -849,7 +879,7 @@
                 <td>Available</td>
               </tr>
             </tbody>
-          </table>
+          </table> -->
 
           <div class="header-container2">
             <h2
@@ -1604,6 +1634,285 @@
       CheckoutDisplayBooks();
       CheckoutDisplayCard();
 
+      let CatalogSelectedBookKeys = [];
+
+      function CatalogDisplayBooks() {
+        const CatalogBookListTable = document.getElementById("CatalogBookList");
+        CatalogBookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                        <td>${book.key}</td>
+                        <td>${bookData.name}</td>
+                        <td>${bookData.subject}</td>
+                        <td>${bookData.assignedLibrarian}</td>
+                        <td>${bookData.assignedStudent}</td>
+                        <td>${bookData.assignedDuration}</td>
+                        <td>${bookData.approval}</td>
+                        <td>${bookData.buzzerStatus}</td>
+                        <td>
+                          <button onclick="CatalogEditBook('${book.key}', '${bookData.name}', '${bookData.subject}', '${bookData.assignedLibrarian}', '${bookData.assignedStudent}', '${bookData.assignedDuration}', ${bookData.approval}, ${bookData.buzzerStatus})">Edit</button>
+                          <button onclick="deleteBook('${book.key}')">Delete</button>
+                        </td>
+                    `;
+              bookListTable.appendChild(row);
+            });
+          });
+      }
+
+      // Update the array of selected book keys
+      function CatalogUpdateSelectedBooks(bookKey) {
+        const checkbox = document.getElementById(`CheckBox_${bookKey}`);
+        if (checkbox.checked) {
+          // Add the book key to the array
+          CatalogSelectedBookKeys.push(bookKey);
+          CatalogDisplayCard();
+        } else {
+          // Remove the book key from the array
+          CatalogSelectedBookKeys = CatalogSelectedBookKeys.filter(
+            (key) => key !== bookKey
+          );
+          CatalogDisplayCard();
+        }
+      }
+
+      function CatalogEditBook() {
+        console.log(CatalogSelectedBookKeys);
+        for (let i = 0; i < CatalogSelectedBookKeys.length; i++) {
+          const bookRFID = CatalogSelectedBookKeys[i];
+          const assignedStudent =
+            document.getElementById("CatalogStudentID").value;
+          const assignedDuration = "N/A";
+
+          const newApproval = "false";
+          const assignedLibrarian = "TestLibrarian";
+
+          if (assignedStudent && assignedDuration) {
+            database.ref(`LibraryRecords/${bookRFID}`).update({
+              assignedStudent: assignedStudent,
+              assignedDuration: assignedDuration,
+              assignedLibrarian: assignedLibrarian,
+              approval: newApproval.toLowerCase() === "true",
+            });
+
+            // Assuming CatalogDisplayBooks is a function to update the UI, you may call it here
+          } else {
+            alert("Please enter a valid student ID and duration");
+          }
+        }
+        CatalogDisplayBooks();
+        CatalogDisplayCard();
+      }
+      function CatalogDisplayCard() {
+        const cardValue = document.getElementById("CatalogBodyContent");
+        cardValue.innerHTML = "";
+
+        // Display information only for the selected books
+        CatalogSelectedBookKeys.forEach((bookKey) => {
+          database
+            .ref(`LibraryRecords/${bookKey}`)
+            .once("value")
+            .then((snapshot) => {
+              const bookData = snapshot.val();
+              const row = document.createElement("div");
+              row.innerHTML = `
+      <p id="bookRFID"><strong>bookRFID:</strong> ${bookKey}</p>
+      <p id="bookName"><strong>bookName:</strong> ${bookData.name}</p>
+      <p id="bookSubject"><strong>bookSubject:</strong> ${bookData.subject}</p>
+      <p id="approval"><strong>approval:</strong> ${bookData.approval}</p>
+    `;
+              cardValue.appendChild(row);
+            });
+        });
+      }
+      function deleteBook(bookRFID) {
+        if (
+          confirm(
+            `Are you sure you want to delete the book with RFID: ${bookRFID}?`
+          )
+        ) {
+          database.ref(`LibraryRecords/${bookRFID}`).remove();
+          displayBooks();
+        }
+      }
+
+      function CatalogEditBook(
+        bookRFID,
+        currentName,
+        currentSubject,
+        currentApproval,
+        currentassignedDuration,
+        currentassignedStudent,
+        currentassignedLibrarian,
+        currentBuzzerStatus
+      ) {
+        const newName = prompt(`Current Name: ${currentName}\nEnter new Name:`);
+        const newSubject = prompt(
+          `Current Subject: ${currentSubject}\nEnter new Subject:`
+        );
+        const newApproval = prompt(
+          `Current Approval: ${currentApproval}\nEnter new Approval:`
+        );
+        const newBuzzerStatus = prompt(
+          `Current Buzzer Status: ${currentBuzzerStatus}\nEnter new Buzzer Status:`
+        );
+
+        const assignedDuration = prompt(
+          `Current borrow time allowance: ${currentassignedDuration}\nEnter new time allowance:`
+        );
+
+        const assignedStudent = prompt(
+          `Current assigned student: ${currentassignedStudent}\nNew student name:`
+        );
+
+        const assignedLibrarian = prompt(
+          `Current assigned librarian: ${currentassignedLibrarian}\nNew Librarian Name:`
+        );
+
+        if (
+          newName !== null &&
+          newSubject !== null &&
+          newApproval !== null &&
+          newBuzzerStatus !== null
+        ) {
+          database.ref(`LibraryRecords/${bookRFID}`).update({
+            name: newName,
+            subject: newSubject,
+            assignedLibrarian: assignedLibrarian,
+            assignedStudent: assignedStudent,
+            assignedDuration: assignedDuration,
+            approval: newApproval.toLowerCase() === "true", // Convert to boolean
+            buzzerStatus: newBuzzerStatus.toLowerCase() === "true", // Convert to boolean
+          });
+
+          displayBooks();
+        }
+      }
+
+      function deleteBook(bookRFID) {
+        if (
+          confirm(
+            `Are you sure you want to delete the book with RFID: ${bookRFID}?`
+          )
+        ) {
+          database.ref(`LibraryRecords/${bookRFID}`).remove();
+          displayBooks();
+        }
+      }
+
+      function CatalogDisplayBooks() {
+        const CatalogBookListTable = document.getElementById("CatalogBookList");
+        const filterInput = document
+          .getElementById("Catalog_")
+          .value.toLowerCase(); // Get the filter input value
+
+        CatalogBookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              const bookName = bookData.name.toLowerCase(); // Convert book name to lowercase for case-insensitive search
+              const bookRFID = book.key.toLowerCase(); // Convert book RFID to lowercase for case-insensitive search
+
+              // Check if the filterInput is empty or matches the book name or RFID
+              if (
+                filterInput === "" ||
+                bookName.includes(filterInput) ||
+                bookRFID.includes(filterInput)
+              ) {
+                const checkboxId = `CheckBox_${book.key}`;
+                row.innerHTML = `
+        <td><input type="checkbox" id="${checkboxId}" onchange="CatalogUpdateSelectedBooks('${book.key}')"/></td>
+        <td>${book.key}</td>
+        <td>${bookData.name}</td>
+        <td>${bookData.subject}</td>
+        <td>${bookData.assignedLibrarian}</td>
+        <td>${bookData.assignedStudent}</td>
+                        <td>${bookData.assignedDuration}</td>
+                        <td>${bookData.approval}</td>
+                        <td>${bookData.buzzerStatus}</td>
+                        <td>
+                          <button onclick="CatalogEditBook('${book.key}', '${bookData.name}', '${bookData.subject}', '${bookData.assignedLibrarian}', '${bookData.assignedStudent}', '${bookData.assignedDuration}', ${bookData.approval}, ${bookData.buzzerStatus})">Edit</button>
+                          <button onclick="deleteBook('${book.key}')">Delete</button>
+                        </td>
+      `;
+                CatalogBookListTable.appendChild(row);
+              }
+            });
+          });
+      }
+
+      // Add an event listener for the CatalogFindBook button to trigger the CatalogDisplayBooks function
+      document
+        .getElementById("CatalogFindBook")
+        .addEventListener("click", CatalogDisplayBooks);
+
+      CatalogDisplayBooks();
+      CatalogDisplayCard();
+      function addBook() {
+        const bookRFID = document.getElementById("bookRFID").value;
+        const bookName = document.getElementById("bookName").value;
+        const bookSubject = document.getElementById("bookSubject").value;
+        const bookAssignedLibrarian = document.getElementById(
+          "bookAssignedLibrarian"
+        ).value;
+        const bookAssignedStudent = document.getElementById(
+          "bookAssignedStudent"
+        ).value;
+        const bookAssignedDuration = document.getElementById(
+          "bookAssignedDuration"
+        ).value;
+
+        if (
+          !bookRFID ||
+          !bookName ||
+          !bookSubject ||
+          !bookAssignedLibrarian ||
+          !bookAssignedStudent ||
+          !bookAssignedDuration
+        ) {
+          alert("Please enter valid information for all fields");
+          return;
+        }
+
+        database
+          .ref(`LibraryRecords/${bookRFID}`)
+          .set({
+            name: bookName,
+            subject: bookSubject,
+            assignedLibrarian: bookAssignedLibrarian,
+            assignedStudent: bookAssignedStudent,
+            assignedDuration: bookAssignedDuration,
+            approval: false,
+            buzzerStatus: false,
+          })
+          .then(() => {
+            // Data successfully written to the database
+            console.log("Book added successfully!");
+            document.getElementById("bookRFID").value = "";
+            document.getElementById("bookName").value = "";
+            document.getElementById("bookSubject").value = "";
+            document.getElementById("bookAssignedLibrarian").value = "";
+            document.getElementById("bookAssignedStudent").value = "";
+            document.getElementById("bookAssignedDuration").value = "";
+          })
+          .catch((error) => {
+            // Handle errors during database write
+            console.error("Error adding book:", error);
+            alert("Error adding book. Please check the console for details.");
+          });
+      }
       function goBack() {
         document.getElementById("card2").style.display = "flex";
         document.getElementById("card3").style.display = "flex";
