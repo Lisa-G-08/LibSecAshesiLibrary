@@ -586,14 +586,14 @@
         Profile
       </a>
 
-      <a href="#" id="CheckIn_txt" onclick="toggleCheckIn()">
-        <i class="fa-solid fa-arrow-right-to-bracket"></i>
-        Check In
-      </a>
       <a href="#" id="CheckOut_txt" onclick="toggleCheckOut()">
         <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        Check Out</a
+        Check In</a
       >
+      <a href="#" id="CheckIn_txt" onclick="toggleCheckIn()">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        Check Out
+      </a>
       <a href="#" id="BookManagement_txt" onclick="toggleBookManagement()">
         <i class="fa-solid fa-book"></i>
         Book Services</a
@@ -667,7 +667,7 @@
       <input
         type="text"
         id="CheckIn_"
-        placeholder="Enter book ID or RFID value"
+        placeholder="Enter book name or RFID value"
       />
       <button id="FindBook">
         <i class="fa-solid fa-magnifying-glass"></i>
@@ -720,9 +720,9 @@
       <input
         type="text"
         id="CheckOut_"
-        placeholder="Enter book ID or RFID value"
+        placeholder="Enter book name or RFID value"
       />
-      <button id="FindBook">
+      <button id="CheckoutFindBook">
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>
       <div style="display: flex; flex-direction: row">
@@ -739,31 +739,33 @@
               <th>Approval</th>
             </tr>
           </thead>
-          <tbody id="bookList"></tbody>
+          <tbody id="CheckoutBookList"></tbody>
         </table>
 
         <div id="BookInfoDisplayCheckOut">
           <h2>Book Information</h2>
-          <div id="bodyContent"></div>
+          <div id="CheckOutBodyContent"></div>
 
           <!-- <p><strong>Title:</strong> Another Book Title</p>
-            <p><strong>Author(s):</strong> Another Author Name</p>
-            <p><strong>ISBN:</strong> 0987654321</p>
-            <p><strong>Publication Year:</strong> 2021</p>
-            <p><strong>Availability:</strong> Available</p> -->
-          <label for="studentID" style="font-weight: bold">Student ID:</label>
-          <input type="text" id="studentID" name="title" /><br /><br />
-          <label for="duration" style="font-weight: bold"
-            >Borrow Duration:</label
+              <p><strong>Author(s):</strong> Another Author Name</p>
+              <p><strong>ISBN:</strong> 0987654321</p>
+              <p><strong>Publication Year:</strong> 2021</p>
+              <p><strong>Availability:</strong> Available</p> -->
+          <label for="CheckOutStudentID" style="font-weight: bold"
+            >Student ID:</label
           >
-          <select id="duration" style="height: 20px; width: 150px" name="title">
-            <option value="" disabled selected hidden>Duration</option>
-            <option value="oneDay">1 day</option>
-            <option value="oneWeek">1 week</option>
-            <option value="thirtyDays">30 days</option>
-          </select>
+          <input type="text" id="CheckOutStudentID" name="title" /><br /><br />
+          <!-- <label for="duration" style="font-weight: bold"
+              >Borrow Duration:</label
+            > -->
+          <!-- <select id="duration" style="height: 20px; width: 150px" name="title">
+              <option value="" disabled selected hidden>Duration</option>
+              <option value="oneDay">1 day</option>
+              <option value="oneWeek">1 week</option>
+              <option value="thirtyDays">30 days</option>
+            </select> -->
           <!-- <input type="text" id="duration" name="title" /><br /><br /> -->
-          <button onclick="CheckOutEditBook()" id="CheckOutButton">
+          <button onclick="CheckoutEditBook()" id="CheckOutButton">
             Check Out
           </button>
         </div>
@@ -1369,7 +1371,8 @@
               approval: newApproval.toLowerCase() === "true",
             });
 
-            // Assuming displayBooks is a function to update the UI, you may call it here
+            CheckoutDisplayBooks();
+            CheckoutDisplayCard();
           } else {
             alert("Please enter a valid student ID and duration");
           }
@@ -1421,21 +1424,22 @@
 
               // Check if the filterInput is empty or matches the book name or RFID
               if (
-                filterInput === "" ||
-                bookName.includes(filterInput) ||
-                bookRFID.includes(filterInput)
+                (filterInput === "" ||
+                  bookName.includes(filterInput) ||
+                  bookRFID.includes(filterInput)) &&
+                !bookData.approval // Check if approval is false
               ) {
                 const checkboxId = `CheckBox_${book.key}`;
                 row.innerHTML = `
-        <td><input type="checkbox" id="${checkboxId}" onchange="updateSelectedBooks('${book.key}')"/></td>
-        <td>${book.key}</td>
-        <td>${bookData.name}</td>
-        <td>${bookData.subject}</td>
-        <td>${bookData.assignedLibrarian}</td>
-        <td>${bookData.assignedStudent}</td>
-        <td>${bookData.assignedDuration}</td>
-        <td>${bookData.approval}</td>
-      `;
+            <td><input type="checkbox" id="${checkboxId}" onchange="updateSelectedBooks('${book.key}')"/></td>
+            <td>${book.key}</td>
+            <td>${bookData.name}</td>
+            <td>${bookData.subject}</td>
+            <td>${bookData.assignedLibrarian}</td>
+            <td>${bookData.assignedStudent}</td>
+            <td>${bookData.assignedDuration}</td>
+            <td>${bookData.approval}</td>
+          `;
                 bookListTable.appendChild(row);
               }
             });
@@ -1449,6 +1453,158 @@
 
       displayBooks();
       displayCard();
+
+      let CheckoutSelectedBookKeys = [];
+
+      function CheckoutDisplayBooks() {
+        const CheckoutBookListTable =
+          document.getElementById("CheckoutBookList");
+        CheckoutBookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              // Use unique IDs for each checkbox
+              const checkboxId = `CheckBox_${book.key}`;
+              row.innerHTML = `
+          <td><input type="checkbox" id="${checkboxId}" onchange="CheckoutUpdateSelectedBooks('${book.key}')"/></td>
+          <td>${book.key}</td>
+          <td>${bookData.name}</td>
+          <td>${bookData.subject}</td>
+          <td>${bookData.assignedLibrarian}</td>
+          <td>${bookData.assignedStudent}</td>
+          <td>${bookData.assignedDuration}</td>
+          <td>${bookData.approval}</td>
+
+        `;
+              CheckoutBookListTable.appendChild(row);
+            });
+          });
+      }
+
+      // Update the array of selected book keys
+      function CheckoutUpdateSelectedBooks(bookKey) {
+        const checkbox = document.getElementById(`CheckBox_${bookKey}`);
+        if (checkbox.checked) {
+          // Add the book key to the array
+          CheckoutSelectedBookKeys.push(bookKey);
+          CheckoutDisplayCard();
+        } else {
+          // Remove the book key from the array
+          CheckoutSelectedBookKeys = CheckoutSelectedBookKeys.filter(
+            (key) => key !== bookKey
+          );
+          CheckoutDisplayCard();
+        }
+      }
+
+      function CheckoutEditBook() {
+        console.log(CheckoutSelectedBookKeys);
+        for (let i = 0; i < CheckoutSelectedBookKeys.length; i++) {
+          const bookRFID = CheckoutSelectedBookKeys[i];
+          const assignedStudent =
+            document.getElementById("CheckOutStudentID").value;
+          const assignedDuration = "N/A";
+
+          const newApproval = "false";
+          const assignedLibrarian = "TestLibrarian";
+
+          if (assignedStudent && assignedDuration) {
+            database.ref(`LibraryRecords/${bookRFID}`).update({
+              assignedStudent: assignedStudent,
+              assignedDuration: assignedDuration,
+              assignedLibrarian: assignedLibrarian,
+              approval: newApproval.toLowerCase() === "true",
+            });
+
+            CheckoutDisplayBooks();
+            CheckoutDisplayCard();
+          } else {
+            alert("Please enter a valid student ID and duration");
+          }
+        }
+        CheckoutDisplayBooks();
+        CheckoutDisplayCard();
+      }
+      function CheckoutDisplayCard() {
+        const cardValue = document.getElementById("CheckOutBodyContent");
+        cardValue.innerHTML = "";
+
+        // Display information only for the selected books
+        CheckoutSelectedBookKeys.forEach((bookKey) => {
+          database
+            .ref(`LibraryRecords/${bookKey}`)
+            .once("value")
+            .then((snapshot) => {
+              const bookData = snapshot.val();
+              const row = document.createElement("div");
+              row.innerHTML = `
+          <p id="bookRFID"><strong>bookRFID:</strong> ${bookKey}</p>
+          <p id="bookName"><strong>bookName:</strong> ${bookData.name}</p>
+          <p id="bookSubject"><strong>bookSubject:</strong> ${bookData.subject}</p>
+          <p id="approval"><strong>approval:</strong> ${bookData.approval}</p>
+        `;
+              cardValue.appendChild(row);
+            });
+        });
+      }
+
+      function CheckoutDisplayBooks() {
+        const CheckoutBookListTable =
+          document.getElementById("CheckoutBookList");
+        const filterInput = document
+          .getElementById("CheckOut_")
+          .value.toLowerCase(); // Get the filter input value
+
+        CheckoutBookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              const bookName = bookData.name.toLowerCase(); // Convert book name to lowercase for case-insensitive search
+              const bookRFID = book.key.toLowerCase(); // Convert book RFID to lowercase for case-insensitive search
+
+              // Check if the filterInput is empty or matches the book name or RFID
+              if (
+                (filterInput === "" ||
+                  bookName.includes(filterInput) ||
+                  bookRFID.includes(filterInput)) &&
+                bookData.approval
+              ) {
+                const checkboxId = `CheckBox_${book.key}`;
+                row.innerHTML = `
+            <td><input type="checkbox" id="${checkboxId}" onchange="CheckoutUpdateSelectedBooks('${book.key}')"/></td>
+            <td>${book.key}</td>
+            <td>${bookData.name}</td>
+            <td>${bookData.subject}</td>
+            <td>${bookData.assignedLibrarian}</td>
+            <td>${bookData.assignedStudent}</td>
+            <td>${bookData.assignedDuration}</td>
+            <td>${bookData.approval}</td>
+          `;
+                CheckoutBookListTable.appendChild(row);
+              }
+            });
+          });
+      }
+
+      // Add an event listener for the CheckoutFindBook button to trigger the CheckoutDisplayBooks function
+      document
+        .getElementById("CheckoutFindBook")
+        .addEventListener("click", CheckoutDisplayBooks);
+
+      CheckoutDisplayBooks();
+      CheckoutDisplayCard();
 
       function goBack() {
         document.getElementById("card2").style.display = "flex";
