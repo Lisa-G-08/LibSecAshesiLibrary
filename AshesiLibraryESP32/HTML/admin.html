@@ -33,6 +33,18 @@
         padding: 8px;
         cursor: pointer;
       }
+    
+      .btn-addBook {
+        margin-top: 10px;
+        padding: 8px;
+        cursor: pointer;
+      }
+
+      @media only screen and (max-width: 918px) {
+        label{
+          
+        }
+      }
     </style>
   </head>
   <body>
@@ -54,7 +66,7 @@
         id="userEmail"
         pattern="^[a-zA-Z0-9._%+-]+@ashesi\.edu\.gh$"
       />
-      <button onclick="addUser()">Add User</button>
+      <button class = "btn-addBook" onclick="addUser()">Add User</button>
     </div>
 
     <table>
