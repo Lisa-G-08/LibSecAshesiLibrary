@@ -134,12 +134,17 @@
         color: #8b0000ed; /* New text color on hover */
         transition: 0.5s ease;
       }
+      @media only screen and (max-width: 918px) {
+        .contact-button {
+          color: black;
+        }
+      }
     </style>
   </head>
   <body>
     <header>
       <div class="logo">
-        <img src="ashesi-logo.png" alt="Ashesi Logo" />
+        <img src="../Resources/ashesi-logo.png" alt="Ashesi Logo" />
         <div class="library-name">Warren Library Register Page</div>
       </div>
       <button class="contact-button">Contact Us</button>
@@ -205,8 +210,6 @@
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
-        console.log("Login attempt:", userType, email);
-
         if (
           userType === "admin" &&
           email === "admin@ashesi.edu.gh" &&
@@ -214,40 +217,76 @@
         ) {
           console.log("Admin login successful");
           window.location.href = "admin.html";
-        } else {
-          // Use the email as the key when fetching user data
-          database
-            .ref(`${userType}s/${email}`)
-            .once("value")
-            .then((snapshot) => {
-              const userData = snapshot.val();
-
-              console.log("User data from database:", userData);
-
-              if (userData && userData.email === email) {
-                console.log("User login successful");
-
-                switch (userType) {
-                  case "Student":
+        } else if (userType === "Student") {
+          const userTypes = ["Student"];
+          userTypes.forEach((userType) => {
+            database
+              .ref(`${userType}s`)
+              .once("value")
+              .then((snapshot) => {
+                snapshot.forEach((user) => {
+                  const userData = user.val();
+                  if (userData.email === email && user.key === password) {
                     window.location.href = "student.html";
-                    break;
-                  case "staff":
-                    window.location.href = "staff.html";
-                    break;
-                  case "facultyIntern":
-                    window.location.href = "facultyIntern.html";
-                    break;
-                  default:
-                    alert("Invalid user type");
-                }
-              } else {
-                console.log("Invalid email or password");
-                alert("Invalid email or password");
-              }
-            })
-            .catch((error) => {
-              console.error("Error fetching user data:", error);
-            });
+                  } else {
+                    alert("Invalid email or password");
+                  }
+                });
+              });
+          });
+        } else if (userType === "staff") {
+          const userTypes = ["StaffFaculty"];
+          userTypes.forEach((userType) => {
+            database
+              .ref(`${userType}s`)
+              .once("value")
+              .then((snapshot) => {
+                snapshot.forEach((user) => {
+                  const userData = user.val();
+                  if (userData.email === email && user.key === password) {
+                    window.location.href = "Faculty.html";
+                  } else {
+                    alert("Invalid email or password");
+                  }
+                });
+              });
+          });
+        } else if (userType === "facultyIntern") {
+          const userTypes = ["FacultyIntern"];
+          userTypes.forEach((userType) => {
+            database
+              .ref(`${userType}s`)
+              .once("value")
+              .then((snapshot) => {
+                snapshot.forEach((user) => {
+                  const userData = user.val();
+                  if (userData.email === email && user.key === password) {
+                    window.location.href = "FacultyIntern.html";
+                  } else {
+                    alert("Invalid email or password");
+                  }
+                });
+              });
+          });
+        } else if (userType === "librarian") {
+          const userTypes = ["Librarian"];
+          userTypes.forEach((userType) => {
+            database
+              .ref(`${userType}s`)
+              .once("value")
+              .then((snapshot) => {
+                snapshot.forEach((user) => {
+                  const userData = user.val();
+                  if (userData.email === email && user.key === password) {
+                    window.location.href = "Librarian.html";
+                  } else {
+                    alert("Invalid email or password");
+                  }
+                });
+              });
+          });
+        } else {
+          alert("Invalid email or password");
         }
       }
     </script>

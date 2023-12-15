@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Times New Roman", sans-serif;
+      background-color: #ffffff;
+      overflow: scroll;
+    }
+
+    #navbar {
+      background-color: #a5494d;
+      padding: 10px;
+      text-align: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1;
+    }
+
+    #logo {
+      max-height: 10%;
+      max-width: 6%;
+      float: left;
+    }
+
+    #navbar a {
+      color: white;
+      padding: 14px 16px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    #navbar a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+
+    #sidenav {
+      height: calc(100vh); /* Adjusted to use percentage */
+      width: 15%; /* Adjusted to use percentage */
+      position: fixed;
+      z-index: 0;
+      left: 2%;
+      top: 12%;
+      background-color: #ffffff;
+      border-right: 2px solid black;
+      text-align: justify;
+    }
+
+    #sidenav a {
+      padding: 15px 8px;
+      text-decoration: none;
+      font-size: 18px;
+      color: black;
+      display: block;
+    }
+
+    #sidenav a:hover {
+      color: #a5494d;
+    }
+
+    #content {
+      margin-left: 15%; /* Adjust margin to accommodate the width of the side navigation */
+      padding: 16px;
+    }
+
+    .ViewProfile {
+      width: 600px;
+      margin: 50px auto;
+      margin-top: 10%;
+      background-color: #d9d9d9; /* Grey background color for the container */
+      padding: 20px;
+      border: 2px solid #999; /* Border color for the container */
+      border-radius: 8px; /* Border radius for rounded corners */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle effect */
+      display: flex;
+      align-items: center; /* Center vertically within the container */
+    }
+
+    .profile {
+      display: flex;
+      align-items: flex-start; /* Align items to the start (top) within the profile div */
+    }
+
+    .profile img {
+      border-radius: 50%;
+      width: 200px;
+      height: 200px;
+      margin-right: 20px;
+    }
+
+    .separator {
+      border-left: 2px solid #999; /* Border color for the separator line */
+      margin-right: 20px;
+      height: 200px; /* Adjust height to match profile image */
+    }
+
+    .info label {
+      font-weight: bold;
+      margin-bottom: 9px; /* Add space between different label-value pairs */
+      display: inline-block; /* Ensure each label-value pair is on the same line */
+      width: 90px; /* Adjust the width as needed */
+    }
+
+    #fname,
+    #lname,
+    #StaffID,
+    #email,
+    #phone {
+      background-color: #d9d9d9;
+      border: 0px;
+      font-size: 16px;
+      font-family: Times New Roman;
+    }
+
+    #EditProfile {
+      width: 180px;
+      height: 30px;
+      background-color: #a5494d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: block;
+    }
+
+    #SaveProfile,
+    #Cancel {
+      width: 150px;
+      height: 30px;
+      background-color: #a5494d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    #CheckIn_ {
+      margin: 50px auto;
+      margin-top: 10%;
+      margin-left: 30%;
+      padding: 10px;
+      width: 40%; /* Set a standard width for the input */
+      box-sizing: border-box;
+      margin-bottom: 5px; /* Add a little space between the input and button */
+    }
+
+    #CheckInButton,
+    #FindBook {
+      margin: 5px;
+      padding: 10px;
+      width: 150px;
+      background-color: #a5494d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #CheckOut_ {
+      margin: 50px auto;
+      margin-top: 10%;
+      margin-left: 30%;
+      padding: 10px;
+      width: 40%; /* Set a standard width for the input */
+      box-sizing: border-box;
+      margin-bottom: 5px; /* Add a little space between the input and button */
+    }
+
+    #CheckOutButton,
+    #SearchButton {
+      margin: 5px;
+      padding: 10px;
+      width: 150px;
+      background-color: #a5494d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #BookManagement {
+      text-align: center;
+      margin-top: 10%;
+    }
+    /* Style the counter cards */
+    #card,
+    #card1,
+    #card2,
+    #card3 {
+      padding: 20px;
+      width: 200px;
+      height: 150px;
+      margin: 50px auto 20px; /* 120px space at the top, 20px space at the bottom */
+      background-color: #ddd;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    #card1,
+    #card3 {
+      margin-top: -2px; /* Adjusted negative margin */
+    }
+
+    #card i,
+    #card1 i,
+    #card2 i,
+    #card3 i {
+      margin: 20px;
+      margin-bottom: 10px;
+      color: #f1f1f1;
+    }
+
+    /* Style for the form container */
+    #formContainer {
+      width: 40%;
+      margin: 50px auto;
+      margin-left: 35%;
+      padding: 20px;
+      background-color: #d3d3d3;
+      border: 2px solid #a5494d;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Style for the BookInfo form */
+    #BookInfo,
+    #WorkStudyForm,
+    #ScheduleForm {
+      text-align: center;
+    }
+
+    #BookInfo h2,
+    #WorkStudyForm h2,
+    #ScheduleForm h2 {
+      color: #a5494d;
+    }
+
+    #BookInfo label,
+    #WorkStudyForm label,
+    #ScheduleForm label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    #BookInfo input,
+    #BookInfo select {
+      width: 100%; /* Adjust width as needed */
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    #BookInfo button,
+    #CancelSave {
+      background-color: #a5494d;
+      color: white;
+      padding: 10px 80px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    #BookInfo button:hover {
+      background-color: #823e3e;
+    }
+
+    #BookSearch {
+      margin: 50px auto;
+      margin-left: 10%;
+      padding: 10px;
+      width: 40%; /* Set a standard width for the input */
+      box-sizing: border-box;
+      margin-bottom: 5px; /* Add a little space between the input and button */
+    }
+
+    #BookSearchButton {
+      margin: 5px;
+      padding: 10px;
+      width: 150px;
+      background-color: #a5494d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #WorkStudy {
+      margin-top: 10%;
+    }
+
+    #ScheduleManagement {
+      text-align: center;
+    }
+    #card4,
+    #card5 {
+      padding: 20px;
+      width: 200px;
+      height: 150px;
+      margin: 50px auto 20px; /* 120px space at the top, 20px space at the bottom */
+      background-color: #ddd;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    #card6,
+    #card7 {
+      padding: 20px;
+      width: 200px;
+      height: 150px;
+      margin: 15px auto; /* 120px space at the top, 20px space at the bottom */
+      background-color: #ddd;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    #card4,
+    #card6 {
+      margin-right: 30px; /* Adjusted negative margin */
+    }
+
+    #card4 i,
+    #card5 i,
+    #card6 i,
+    #card7 i {
+      margin: 20px;
+      margin-bottom: 10px;
+      color: #f1f1f1;
+    }
+
+    /* Style for the form container */
+    #formContainer1,
+    #ScheduleEditing {
+      width: 20%;
+      margin: 50px auto;
+      margin-left: 35%;
+      padding: 20px;
+      background-color: #d3d3d3;
+      border: 2px solid #a5494d;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #SetCode {
+      width: 15%;
+      margin: 50px auto;
+      margin-left: 35%;
+      padding: 20px;
+      background-color: #d3d3d3;
+      border: 2px solid #a5494d;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #WorkStudyForm input,
+    #ScheduleForm input,
+    #SetCodeForm input,
+    #WorkStudyForm select,
+    #ScheduleForm select {
+      width: 80%;
+      padding: 6px; /* Adjusted padding */
+      margin-top: 3px; /* Adjusted margin */
+      margin-bottom: 8px; /* Adjusted margin */
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    #SetCodeForm input {
+      width: 90%; /* Adjusted width for responsiveness */
+      padding: 3px; /* Adjusted padding */
+      margin-top: 2px; /* Adjusted margin */
+      margin-bottom: 4px; /* Adjusted margin */
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    #WorkStudyForm button,
+    #ScheduleForm button,
+    #CancelAction,
+    #CancelEdit {
+      margin-left: 10%;
+      margin-top: 10px;
+      background-color: #a5494d;
+      color: white;
+      padding: 8px 40px; /* Adjusted padding */
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    #SetCodeForm button,
+    #CancelCode {
+      margin-left: 10%;
+      margin-top: 10px;
+      background-color: #a5494d;
+      color: white;
+      padding: 8px 40px; /* Adjusted padding */
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    #WorkStudyForm button:hover,
+    #SetCodeForm button:hover,
+    #ScheduleForm button:hover {
+      background-color: #823e3e;
+    }
+
+    .icon-container {
+      margin-right: 50%;
+      cursor: pointer;
+    }
+
+    #scheduleTable,
+    #attendanceTable,
+    #Catalog {
+      width: 80%;
+      margin-top: 10%;
+      margin: 20px auto;
+      margin-left: 20%;
+      border-collapse: collapse;
+      border: 2px solid #a5494d;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    #scheduleTable th,
+    #scheduleTable td,
+    #attendanceTable th,
+    #attendanceTable td,
+    #Catalog td,
+    #Catalog th {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    #scheduleTable th,
+    #attendanceTable th,
+    #Catalog th {
+      background-color: #a5494d;
+      color: white;
+      font-weight: bold;
+    }
+
+    #scheduleTable tbody tr:nth-child(even),
+    #attendanceTable tbody tr:nth-child(even),
+    #Catalog tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    #scheduleTable tbody tr:hover,
+    #attendanceTable tbody tr:hover {
+      background-color: #ddd;
+    }
+
+    #PastAttendance h2 {
+      color: #a5494d;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .header-container {
+      margin-left: 20%;
+      cursor: pointer;
+    }
+
+    .header-container1,
+    .header-container2 {
+      margin-right: 56%;
+      cursor: pointer;
+    }
+
+    #SetCodeForm h2,
+    #WorkStudyForm h2,
+    #ScheduleForm h2 {
+      color: #a5494d;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    #BookInfoDisplayCheckOut,
+    #BookInfoDisplayCheckIn {
+      width: 30%;
+      text-align: center;
+      margin-top: 20px;
+      margin-left: 5%;
+      padding: 20px;
+      background-color: #ddd;
+      border: 1px solid #a5494d;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #BookInfoDisplayCheckOut p,
+    #BookInfoDisplayCheckIn p {
+      margin: 10px 0;
+    }
+
+    #BookInfoDisplayCheckOut strong,
+    #BookInfoDisplayCheckIn strong {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid #ddd;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px;
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    <div id="CheckOut">
+      <input
+        type="text"
+        id="CheckOut_"
+        placeholder="Enter book ID or RFID value"
+      />
+      <button id="FindBook">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <div style="display: flex; flex-direction: row">
+        <table>
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Book RFID</th>
+              <th>Name</th>
+              <th>Subject</th>
+              <th>Librarian</th>
+              <th>Student</th>
+              <th>Duration</th>
+              <th>Approval</th>
+            </tr>
+          </thead>
+          <tbody id="bookList"></tbody>
+        </table>
+
+        <div id="BookInfoDisplayCheckOut">
+          <h2>Book Information</h2>
+          <div id="bodyContent"></div>
+
+          <!-- <p><strong>Title:</strong> Another Book Title</p>
+            <p><strong>Author(s):</strong> Another Author Name</p>
+            <p><strong>ISBN:</strong> 0987654321</p>
+            <p><strong>Publication Year:</strong> 2021</p>
+            <p><strong>Availability:</strong> Available</p> -->
+          <label for="studentID" style="font-weight: bold">Student ID:</label>
+          <input type="text" id="studentID" name="title" /><br /><br />
+          <label for="duration" style="font-weight: bold"
+            >Borrow Duration:</label
+          >
+          <select id="duration" style="height: 20px; width: 150px" name="title">
+            <option value="" disabled selected hidden>Duration</option>
+            <option value="oneDay">1 day</option>
+            <option value="oneWeek">1 week</option>
+            <option value="thirtyDays">30 days</option>
+          </select>
+          <!-- <input type="text" id="duration" name="title" /><br /><br /> -->
+          <button onclick="CheckOutEditBook()" id="CheckOutButton">
+            Check Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCzSMSm6ZHGoLGA7AToiIMHByDFz9yIIbk",
+      authDomain: "ashesilibraryesp32-fd5b8.firebaseapp.com",
+      databaseURL:
+        "https://ashesilibraryesp32-fd5b8-default-rtdb.firebaseio.com",
+      projectId: "ashesilibraryesp32-fd5b8",
+      storageBucket: "ashesilibraryesp32-fd5b8.appspot.com",
+      messagingSenderId: "185836313770",
+      appId: "1:185836313770:web:ff9137a24273f2ed0844d3",
+      measurementId: "G-J8PWV52BJE",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    let CheckOutSelectedBookKeys = [];
+
+    function CheckOutDisplayBooks() {
+      const CheckoutBookListTable = document.getElementById("bookList");
+      CheckoutBookListTable.innerHTML = "";
+
+      database
+        .ref("LibraryRecords")
+        .once("value")
+        .then((snapshot) => {
+          snapshot.forEach((book) => {
+            const bookData = book.val();
+            const row = document.createElement("tr");
+
+            // Use unique IDs for each checkbox
+            const checkboxId = `CheckBox_${book.key}`;
+            row.innerHTML = `
+          <td><input type="checkbox" id="${checkboxId}" onchange="CheckoutUpdateSelectedBooks('${book.key}')"/></td>
+          <td>${book.key}</td>
+          <td>${bookData.name}</td>
+          <td>${bookData.subject}</td>
+          <td>${bookData.assignedLibrarian}</td>
+          <td>${bookData.assignedStudent}</td>
+          <td>${bookData.assignedDuration}</td>
+          <td>${bookData.approval}</td>
+
+        `;
+            CheckoutBookListTable.appendChild(row);
+          });
+        });
+    }
+
+    // Update the array of selected book keys
+    function CheckoutUpdateSelectedBooks(bookKey) {
+      const checkbox = document.getElementById(`CheckBox_${bookKey}`);
+      if (checkbox.checked) {
+        // Add the book key to the array
+        CheckOutSelectedBookKeys.push(bookKey);
+        CheckOutDisplayCard();
+      } else {
+        // Remove the book key from the array
+        CheckOutSelectedBookKeys = CheckOutSelectedBookKeys.filter(
+          (key) => key !== bookKey
+        );
+        CheckOutDisplayCard();
+      }
+    }
+
+    function CheckOutEditBook() {
+      console.log(CheckOutSelectedBookKeys);
+      for (let i = 0; i < CheckOutSelectedBookKeys.length; i++) {
+        const bookRFID = CheckOutSelectedBookKeys[i];
+        const assignedStudent = document.getElementById("studentID").value;
+        const assignedDuration = document.getElementById("duration").value;
+
+        const newApproval = "True";
+        const assignedLibrarian = "TestLibrarian";
+
+        if (assignedStudent && assignedDuration) {
+          database.ref(`LibraryRecords/${bookRFID}`).update({
+            assignedStudent: assignedStudent,
+            assignedDuration: assignedDuration,
+            assignedLibrarian: assignedLibrarian,
+            approval: newApproval.toLowerCase() === "true",
+          });
+
+          // Assuming CheckOutDisplayBooks is a function to update the UI, you may call it here
+        } else {
+          alert("Please enter a valid student ID and duration");
+        }
+      }
+      CheckOutDisplayBooks();
+      CheckOutDisplayCard();
+    }
+    function CheckOutDisplayCard() {
+      const cardValue = document.getElementById("bodyContent");
+      cardValue.innerHTML = "";
+
+      // Display information only for the selected books
+      CheckOutSelectedBookKeys.forEach((bookKey) => {
+        database
+          .ref(`LibraryRecords/${bookKey}`)
+          .once("value")
+          .then((snapshot) => {
+            const bookData = snapshot.val();
+            const row = document.createElement("div");
+            row.innerHTML = `
+          <p id="bookRFID"><strong>bookRFID:</strong> ${bookKey}</p>
+          <p id="bookName"><strong>bookName:</strong> ${bookData.name}</p>
+          <p id="bookSubject"><strong>bookSubject:</strong> ${bookData.subject}</p>
+          <p id="approval"><strong>approval:</strong> ${bookData.approval}</p>
+        `;
+            cardValue.appendChild(row);
+          });
+      });
+    }
+
+    function CheckOutDisplayBooks() {
+      const CheckoutBookListTable = document.getElementById("bookList");
+      const filterInput = document
+        .getElementById("CheckOut_")
+        .value.toLowerCase(); // Get the filter input value
+
+      CheckoutBookListTable.innerHTML = "";
+
+      database
+        .ref("LibraryRecords")
+        .once("value")
+        .then((snapshot) => {
+          snapshot.forEach((book) => {
+            const bookData = book.val();
+            const row = document.createElement("tr");
+
+            const bookName = bookData.name.toLowerCase(); // Convert book name to lowercase for case-insensitive search
+            const bookRFID = book.key.toLowerCase(); // Convert book RFID to lowercase for case-insensitive search
+
+            // Check if the filterInput is empty or matches the book name or RFID
+            if (
+              (filterInput === "" ||
+                bookName.includes(filterInput) ||
+                bookRFID.includes(filterInput)) &&
+              bookData.approval // Check if approval is false
+            ) {
+              const checkboxId = `CheckBox_${book.key}`;
+              row.innerHTML = `
+            <td><input type="checkbox" id="${checkboxId}" onchange="CheckoutUpdateSelectedBooks('${book.key}')"/></td>
+            <td>${book.key}</td>
+            <td>${bookData.name}</td>
+            <td>${bookData.subject}</td>
+            <td>${bookData.assignedLibrarian}</td>
+            <td>${bookData.assignedStudent}</td>
+            <td>${bookData.assignedDuration}</td>
+            <td>${bookData.approval}</td>
+          `;
+              CheckoutBookListTable.appendChild(row);
+            }
+          });
+        });
+    }
+
+    // Add an event listener for the FindBook button to trigger the CheckOutDisplayBooks function
+    document
+      .getElementById("FindBook")
+      .addEventListener("click", CheckOutDisplayBooks);
+
+    CheckOutDisplayBooks();
+    CheckOutDisplayCard();
+  </script>
+</html>

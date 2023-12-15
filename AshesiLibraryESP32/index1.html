@@ -217,8 +217,8 @@
             assignedLibrarian: assignedLibrarian,
             assignedStudent: assignedStudent,
             assignedDuration: assignedDuration,
-            approval: newApproval === "true",
-            buzzerStatus: newBuzzerStatus === "true",
+            approval: newApproval.toLowerCase() === "true", // Convert to boolean
+            buzzerStatus: newBuzzerStatus.toLowerCase() === "true", // Convert to boolean
           });
 
           displayBooks();

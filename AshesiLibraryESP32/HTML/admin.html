@@ -1,120 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ashesi Koha Library Management System</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    table, th, td {
-      border: 1px solid #ddd;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-    }
-
-    button {
-      margin-top: 10px;
-      padding: 8px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <h1>Libsec-Warren Management System</h1>
-
-  <div>
-    <label for="userType">User Type:</label>
-    <select id="userType">
-      <option value="Librarian">Librarian</option>
-      <option value="Student">Student</option>
-      <option value="StaffFaculty">Staff/Faculty</option>
-      <option value="FacultyIntern">Faculty Intern</option>
-      <option value="Guest">Guest</option>
-    </select>
-    <label for="userID">User ID:</label>
-    <input type="text" id="userID" pattern="^\d{8}$" />
-    <label for="userEmail">User Email:</label>
-    <input type="email" id="userEmail" pattern="^[a-zA-Z0-9._%+-]+@ashesi\.edu\.gh$" />
-    <button onclick="addUser()">Add User</button>
-  </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>User ID</th>
-        <th>User Email</th>
-        <th>User Type</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="userList"></tbody>
-  </table>
-
-  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCzSMSm6ZHGoLGA7AToiIMHByDFz9yIIbk",
-      authDomain: "ashesilibraryesp32-fd5b8.firebaseapp.com",
-      databaseURL:
-        "https://ashesilibraryesp32-fd5b8-default-rtdb.firebaseio.com",
-      projectId: "ashesilibraryesp32-fd5b8",
-      storageBucket: "ashesilibraryesp32-fd5b8.appspot.com",
-      messagingSenderId: "185836313770",
-      appId: "1:185836313770:web:ff9137a24273f2ed0844d3",
-      measurementId: "G-J8PWV52BJE",
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-
-    function addUser() {
-      const userType = document.getElementById("userType").value;
-      const userID = document.getElementById("userID").value;
-      const userEmail = document.getElementById("userEmail").value;
-
-      if (!userID || !userEmail) {
-        alert("Please enter valid User ID and Email");
-        return;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ashesi Koha Library Management System</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
       }
 
-      database.ref(`${userType}s/${userID}`).set({
-        email: userEmail,
-      });
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
 
-      document.getElementById("userID").value = "";
-      document.getElementById("userEmail").value = "";
-      displayUsers();
-    }
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
 
-    function displayUsers() {
-      const userListTable = document.getElementById("userList");
-      userListTable.innerHTML = "";
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
 
-      // Fetch all user types and display them
-      const userTypes = ["Librarian", "Student", "StaffFaculty", "FacultyIntern"];
-      userTypes.forEach((userType) => {
-        database
-          .ref(`${userType}s`)
-          .once("value")
-          .then((snapshot) => {
-            snapshot.forEach((user) => {
-              const userData = user.val();
-              const row = document.createElement("tr");
-              row.innerHTML = `
+      button {
+        margin-top: 10px;
+        padding: 8px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Libsec-Warren Management System</h1>
+
+    <div>
+      <label for="userType">User Type:</label>
+      <select id="userType">
+        <option value="Librarian">Librarian</option>
+        <option value="Student">Student</option>
+        <option value="StaffFaculty">Staff/Faculty</option>
+        <option value="FacultyIntern">Faculty Intern</option>
+      </select>
+      <label for="userID">User ID:</label>
+      <input type="text" id="userID" pattern="^\d{8}$" />
+      <label for="userEmail">User Email:</label>
+      <input
+        type="email"
+        id="userEmail"
+        pattern="^[a-zA-Z0-9._%+-]+@ashesi\.edu\.gh$"
+      />
+      <button onclick="addUser()">Add User</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>User Email</th>
+          <th>User Type</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="userList"></tbody>
+    </table>
+
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyCzSMSm6ZHGoLGA7AToiIMHByDFz9yIIbk",
+        authDomain: "ashesilibraryesp32-fd5b8.firebaseapp.com",
+        databaseURL:
+          "https://ashesilibraryesp32-fd5b8-default-rtdb.firebaseio.com",
+        projectId: "ashesilibraryesp32-fd5b8",
+        storageBucket: "ashesilibraryesp32-fd5b8.appspot.com",
+        messagingSenderId: "185836313770",
+        appId: "1:185836313770:web:ff9137a24273f2ed0844d3",
+        measurementId: "G-J8PWV52BJE",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+
+      function addUser() {
+        const userType = document.getElementById("userType").value;
+        const userID = document.getElementById("userID").value;
+        const userEmail = document.getElementById("userEmail").value;
+
+        if (!userID || !userEmail) {
+          alert("Please enter valid User ID and Email");
+          return;
+        }
+
+        database.ref(`${userType}s/${userID}`).set({
+          email: userEmail,
+        });
+
+        document.getElementById("userID").value = "";
+        document.getElementById("userEmail").value = "";
+        displayUsers();
+      }
+
+      function displayUsers() {
+        const userListTable = document.getElementById("userList");
+        userListTable.innerHTML = "";
+
+        // Fetch all user types and display them
+        const userTypes = [
+          "Librarian",
+          "Student",
+          "StaffFaculty",
+          "FacultyIntern",
+        ];
+        userTypes.forEach((userType) => {
+          database
+            .ref(`${userType}s`)
+            .once("value")
+            .then((snapshot) => {
+              snapshot.forEach((user) => {
+                const userData = user.val();
+                const row = document.createElement("tr");
+                row.innerHTML = `
                             <td>${user.key}</td>
                             <td>${userData.email}</td>
                             <td>${userType}</td>
@@ -123,39 +134,39 @@
                               <button onclick="deleteUser('${userType}', '${user.key}')">Delete</button>
                             </td>
                         `;
-              userListTable.appendChild(row);
+                userListTable.appendChild(row);
+              });
             });
-          });
-      });
-    }
-
-    function editUser(userType, userID, userEmail) {
-      const newEmail = prompt(
-        `Current Email: ${userEmail}\nEnter new Email:`
-      );
-
-      if (newEmail !== null) {
-        database.ref(`${userType}s/${userID}`).update({
-          email: newEmail,
         });
-
-        displayUsers();
       }
-    }
 
-    function deleteUser(userType, userID) {
-      if (
-        confirm(
-          `Are you sure you want to delete the ${userType.toLowerCase()} with ID: ${userID}?`
-        )
-      ) {
-        database.ref(`${userType}s/${userID}`).remove();
-        displayUsers();
+      function editUser(userType, userID, userEmail) {
+        const newEmail = prompt(
+          `Current Email: ${userEmail}\nEnter new Email:`
+        );
+
+        if (newEmail !== null) {
+          database.ref(`${userType}s/${userID}`).update({
+            email: newEmail,
+          });
+
+          displayUsers();
+        }
       }
-    }
 
-    // Initial display of users
-    displayUsers();
-  </script>
-</body>
+      function deleteUser(userType, userID) {
+        if (
+          confirm(
+            `Are you sure you want to delete the ${userType.toLowerCase()} with ID: ${userID}?`
+          )
+        ) {
+          database.ref(`${userType}s/${userID}`).remove();
+          displayUsers();
+        }
+      }
+
+      // Initial display of users
+      displayUsers();
+    </script>
+  </body>
 </html>
