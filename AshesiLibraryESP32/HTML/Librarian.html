@@ -800,15 +800,6 @@
           <label for="bookSubject">Subject:</label>
           <input type="text" id="bookSubject" />
 
-          <label for="bookAssignedLibrarian">Assigned Librarian:</label>
-          <input type="text" id="bookAssignedLibrarian" />
-
-          <label for="bookAssignedStudent">Assigned Student:</label>
-          <input type="text" id="bookAssignedStudent" />
-
-          <label for="bookAssignedDuration">Assigned Duration:</label>
-          <input type="text" id="bookAssignedDuration" />
-
           <button onclick="addBook()">Submit</button>
 
           <button id="CancelSave" onclick="CancelBookInfo(event)">
@@ -1658,7 +1649,7 @@
                         <td>${bookData.buzzerStatus}</td>
                         <td>
                           <button onclick="CatalogEditBook('${book.key}', '${bookData.name}', '${bookData.subject}', '${bookData.assignedLibrarian}', '${bookData.assignedStudent}', '${bookData.assignedDuration}', ${bookData.approval}, ${bookData.buzzerStatus})">Edit</button>
-                          <button onclick="deleteBook('${book.key}')">Delete</button>
+                          <button onclick="deleteBook('${book.key}')" style="background-color: #; /* Red */ color: white; padding: 10px 15px; border: 1px solid white; border-radius: 5px; cursor: pointer;">Delete</button>
                         </td>
                     `;
               bookListTable.appendChild(row);
@@ -1843,8 +1834,8 @@
                         <td>${bookData.approval}</td>
                         <td>${bookData.buzzerStatus}</td>
                         <td>
-                          <button onclick="CatalogEditBook('${book.key}', '${bookData.name}', '${bookData.subject}', '${bookData.assignedLibrarian}', '${bookData.assignedStudent}', '${bookData.assignedDuration}', ${bookData.approval}, ${bookData.buzzerStatus})">Edit</button>
-                          <button onclick="deleteBook('${book.key}')">Delete</button>
+                          <button onclick="CatalogEditBook('${book.key}', '${bookData.name}', '${bookData.subject}', '${bookData.assignedLibrarian}', '${bookData.assignedStudent}', '${bookData.assignedDuration}', ${bookData.approval}, ${bookData.buzzerStatus})" style="background-color: #8b0000; /* Red */ color: white; padding: 10px 15px; border: 1px solid white; border-radius: 5px; cursor: pointer;">Edit</button>
+                          <button onclick="deleteBook('${book.key}')" style="background-color: #8b0000; /* Red */ color: white; padding: 10px 15px; border: 1px solid white; border-radius: 5px; cursor: pointer;">Delete</button>
                         </td>
       `;
                 CatalogBookListTable.appendChild(row);
@@ -1864,15 +1855,9 @@
         const bookRFID = document.getElementById("bookRFID").value;
         const bookName = document.getElementById("bookName").value;
         const bookSubject = document.getElementById("bookSubject").value;
-        const bookAssignedLibrarian = document.getElementById(
-          "bookAssignedLibrarian"
-        ).value;
-        const bookAssignedStudent = document.getElementById(
-          "bookAssignedStudent"
-        ).value;
-        const bookAssignedDuration = document.getElementById(
-          "bookAssignedDuration"
-        ).value;
+        const bookAssignedLibrarian = 'default';
+        const bookAssignedStudent = 'default';
+        const bookAssignedDuration = 'default';
 
         if (
           !bookRFID ||
@@ -1903,9 +1888,9 @@
             document.getElementById("bookRFID").value = "";
             document.getElementById("bookName").value = "";
             document.getElementById("bookSubject").value = "";
-            document.getElementById("bookAssignedLibrarian").value = "";
-            document.getElementById("bookAssignedStudent").value = "";
-            document.getElementById("bookAssignedDuration").value = "";
+            // document.getElementById("bookAssignedLibrarian").value = "";
+            // document.getElementById("bookAssignedStudent").value = "";
+            // document.getElementById("bookAssignedDuration").value = "";
           })
           .catch((error) => {
             // Handle errors during database write
