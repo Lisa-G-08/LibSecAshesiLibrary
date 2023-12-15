@@ -3,62 +3,197 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ashesi Koha Library Management System</title>
+    <title>Warren Library</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        color: #8b0000;
       }
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
+      header {
+        background-color: #8b0000;
+        color: #fff;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
 
-      table,
-      th,
-      td {
-        border: 1px solid #ddd;
+      .logo {
+        display: flex;
+        align-items: center;
       }
 
-      th,
-      td {
+      .logo img {
+        height: 60px;
+        margin-right: 10px;
+      }
+
+      .library-name {
+        font-size: 24px;
+        font-weight: bold;
+        color: #fff;
+        display: inline-block;
+        padding: 0 10px;
+      }
+
+      /* Your existing styles here */
+
+      /* Additional styles for the register section */
+      .login-register-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px auto; /* Center the box */
+        background-image: url("Ashesi_Campus.jpeg");
+        /* background-repeat: no-repeat; */
+        /* background-size: cover; */
+        background-position: center;
+      }
+
+      .login-form {
+        display: flex;
+        flex-direction: column;
+        width: 500px;
+        margin: 10px;
+        background-color: #fff; /* Gray background */
+        padding: 40px;
+        border-radius: 15px;
+        margin-top: 2%;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        font-size: 14px;
+        margin-bottom: 100px;
+      }
+
+      .form-group input,
+      .form-group select {
         padding: 10px;
-        text-align: left;
+        border: 1px solid #8b0000;
+        border-radius: 5px;
       }
 
       button {
-        margin-top: 10px;
-        padding: 8px;
+        background-color: #8b0000; /* Red wine background */
+        color: #fff;
+        padding: 10px 10% 10px 10%;
+        border: none;
+        border-radius: 5px;
         cursor: pointer;
+        margin-top: 20px;
+      }
+
+      .Register-link {
+        margin-top: 20px;
+        text-align: center;
+        color: #000; /* Change text color to black */
+      }
+
+      .Register-link a,
+      .Register-link a:visited {
+        color: #8b0000;
+      }
+
+      /* Additional styles for the contact button */
+      .contact-button {
+        background-color: #8b0000;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      input {
+        width: 100%;
+      }
+
+      .btn-container {
+        /* display: flex; */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        margin-top: 20px; /* Adjust the margin as needed */
+        background-color: redwine; /* Initial background color */
+        color: white; /* Initial text color */
+        transition: background-color 0.3s ease, color 0.3s ease; /* Add a smooth transition effect */
+      }
+
+      button:hover {
+        background-color: white; /* New background color on hover */
+        color: #8b0000ed; /* New text color on hover */
+        transition: 0.5s ease;
+      }
+      @media only screen and (max-width: 918px) {
+        .contact-button {
+          color: black;
+        }
       }
     </style>
   </head>
   <body>
-    <h1>Libsec-Warren Management System</h1>
+    <header>
+      <div class="logo">
+        <img src="./Resources/ashesi-logo.png" alt="Ashesi Logo" />
+        <div class="library-name">Warren Library Register Page</div>
+      </div>
+      <button class="contact-button">Contact Us</button>
+    </header>
+    <div class="login-register-section">
+      <div class="login-form">
+        <h2>Login</h2>
+        <div class="form-group">
+          <label for="userType">Login as:</label>
+          <select id="userType">
+            <option value="admin">Admin</option>
+            <option value="librarian">Librarian</option>
+            <!-- <option value="Student">Student</option>
+            <option value="staff">Staff/Faculty</option>
+            <option value="facultyIntern">Faculty Intern</option> -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" placeholder="Enter your email" />
+        </div>
+        <div class="form-group">
+          <label for="password">ID Number or Admin Password:</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your ID Number or Admin Password"
+          />
+        </div>
+        <div class="btn-container">
+          <button onclick="Login()">Login</button>
+        </div>
 
-    <div>
-      <label for="bookRFID">Book RFID:</label>
-      <input type="text" id="bookRFID" />
-      <button onclick="addBook()">Add Book</button>
+        <!-- <div class="Register-link">
+          <p>You have no account? <a href="#">Register here!</a></p>
+          <a href="#" class="forgot-password">Forgot Password?</a>
+        </div> -->
+      </div>
     </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Book RFID</th>
-          <th>Approval</th>
-          <th>Buzzer Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="bookList"></tbody>
-    </table>
 
     <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
+
     <script>
+      function setCookie(name, value, days) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+      }
       const firebaseConfig = {
         apiKey: "AIzaSyCzSMSm6ZHGoLGA7AToiIMHByDFz9yIIbk",
         authDomain: "ashesilibraryesp32-fd5b8.firebaseapp.com",
@@ -74,78 +209,86 @@
       firebase.initializeApp(firebaseConfig);
       const database = firebase.database();
 
-      function addBook() {
-        const bookRFID = document.getElementById("bookRFID").value;
-        if (!bookRFID) {
-          alert("Please enter a valid Book RFID");
-          return;
-        }
+      function Login() {
+        const userType = document.getElementById("userType").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        document.cookie = `password=${email}; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/`;
 
-        database.ref(`LibraryRecords/${bookRFID}`).set({
-          approval: false,
-          buzzerStatus: false,
-        });
-
-        document.getElementById("bookRFID").value = "";
-        displayBooks();
-      }
-
-      function displayBooks() {
-        const bookListTable = document.getElementById("bookList");
-        bookListTable.innerHTML = "";
-
-        database
-          .ref("LibraryRecords")
-          .once("value")
-          .then((snapshot) => {
-            snapshot.forEach((book) => {
-              const bookData = book.val();
-              const row = document.createElement("tr");
-              row.innerHTML = `
-                            <td>${book.key}</td>
-                            <td>${bookData.approval}</td>
-                            <td>${bookData.buzzerStatus}</td>
-                            <td>
-                              <button onclick="editBook('${book.key}', ${bookData.approval}, ${bookData.buzzerStatus})">Edit</button>
-                              <button onclick="deleteBook('${book.key}')">Delete</button>
-                            </td>
-                        `;
-              bookListTable.appendChild(row);
-            });
-          });
-      }
-
-      function editBook(bookRFID, currentApproval, currentBuzzerStatus) {
-        const newApproval = prompt(
-          `Current Approval: ${currentApproval}\nEnter new Approval:`
-        );
-        const newBuzzerStatus = prompt(
-          `Current Buzzer Status: ${currentBuzzerStatus}\nEnter new Buzzer Status:`
-        );
-
-        if (newApproval !== null && newBuzzerStatus !== null) {
-          database.ref(`LibraryRecords/${bookRFID}`).update({
-            approval: newApproval === "true",
-            buzzerStatus: newBuzzerStatus === "true",
-          });
-
-          displayBooks();
-        }
-      }
-
-      function deleteBook(bookRFID) {
         if (
-          confirm(
-            `Are you sure you want to delete the book with RFID: ${bookRFID}?`
-          )
+          userType === "admin" &&
+          email === "admin@ashesi.edu.gh" &&
+          password === "admin1234"
         ) {
-          database.ref(`LibraryRecords/${bookRFID}`).remove();
-          displayBooks();
+          console.log("Admin login successful");
+          //   AshesiLibraryESP32\HTML\admin.html
+          window.open("admin.html", "_blank");
+        } else if (userType === "Student") {
+          const userTypes = ["Student"];
+          userTypes.forEach((userType) => {
+            database
+              .ref(`${userType}s`)
+              .once("value")
+              .then((snapshot) => {
+                snapshot.forEach((user) => {
+                  const userData = user.val();
+                  if (userData.email === email && user.key === password) {
+                    window.location.href = "student.html";
+                  }
+                });
+              });
+          });
+        } else if (userType === "staff") {
+          const userTypes = ["StaffFaculty"];
+          userTypes.forEach((userType) => {
+            database
+              .ref(`${userType}s`)
+              .once("value")
+              .then((snapshot) => {
+                snapshot.forEach((user) => {
+                  const userData = user.val();
+                  if (userData.email === email && user.key === password) {
+                    window.location.href = "Faculty.html";
+                  }
+                });
+              });
+          });
+        } else if (userType === "facultyIntern") {
+          const userTypes = ["FacultyIntern"];
+          userTypes.forEach((userType) => {
+            database
+              .ref(`${userType}s`)
+              .once("value")
+              .then((snapshot) => {
+                snapshot.forEach((user) => {
+                  const userData = user.val();
+                  if (userData.email === email && user.key === password) {
+                    window.location.href = "FacultyIntern.html";
+                  }
+                });
+              });
+          });
+        } else if (userType === "librarian") {
+          const userTypes = ["Librarian"];
+          userTypes.forEach((userType) => {
+            database
+              .ref(`${userType}s`)
+              .once("value")
+              .then((snapshot) => {
+                snapshot.forEach((user) => {
+                  const userData = user.val();
+                  if (userData.email === email && user.key === password) {
+                    setCookie("librarianPassword", email, 1); // Change the expiration time as needed
+
+                    window.location.href = "Librarian.html";
+                  }
+                });
+              });
+          });
+        } else {
+          alert("Invalid email or password");
         }
       }
-
-      // Initial display of books
-      displayBooks();
     </script>
   </body>
 </html>

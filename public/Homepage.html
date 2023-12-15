@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Website</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;                                                              
+            margin: 0;
+            padding: 0;
+            background-color: #fff; /* White background */
+            color: #A5494D; /* Red wine text color */
+        }
+
+        header {
+            background-color: #A5494D;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            max-height: 10%;
+            max-width: 6%;
+            width: auto; 
+            float: left;
+        }
+
+
+        .library-name {
+            font-size: 25px;
+            font-weight: bold;
+            color: #fff; /* Black text color */
+            /* Red wine to white gradient */
+            display: inline-block; /* Ensure the background covers the text */
+            padding: 0 10px; /* Add padding to create space around the text */
+        }
+
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            margin-left: auto; /* Add this line to align to the right */
+            margin-right: 20px;
+        }
+
+        .header-buttons button {
+            margin-left: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #A5494D;
+            color:white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .tab-bar {
+            background-color: #A5494D;
+            padding: 5px;
+        }
+
+        .tab-bar button{
+            background-color: #A5494D;
+            font-size: 20px;
+            font-weight: bold;
+            color:white;
+            border-color: white;
+        }
+
+        .header-buttons button {
+            margin-left: 10px;
+        }
+
+        .search-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            padding: 0 20px; /* Added padding to align with login/Register */
+        }
+
+        .button, .search-icon {
+            color: #fff; /* White text color */
+            background-color:#A5494D; /* Red wine button background */
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-tab {
+            width: 300px; /* Adjust as needed */
+            padding: 10px;
+            border: 1px solid #A5494D; /* Red wine border */
+            border-radius: 5px;
+            margin-left: 10px; /* Adjusted margin */
+        }
+
+        .catalog-section {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap; /* Allow items to wrap to the next line */
+            margin-bottom: 10px;
+            padding: 10px 5px; /* Added padding to align with login/Register */
+            z-index: 1;
+        }
+
+        .catalog-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0% 20%;
+            border-radius: 10px; /* Adjust the radius as needed */
+            z-index: 5; /* Send the pseudo-element to the back */
+        }
+
+        .box {
+            flex: 1; /* Equal width for each box */
+            margin-bottom: 15px; /* Added margin */
+            margin-right: 15px; /* Added margin */
+            padding: 13px;
+            border: 1px solid#fff; /* Red wine border */
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .search-button {
+            flex: 0.1; /* Adjusted width to make it smaller */
+            margin-bottom: 10px; /* Added margin */
+            padding: 10px;
+            background-color: #A5494D; /* Red wine background */
+            border: 1px solid #fff; /* White border */
+            border-radius: 5px;
+            box-sizing: border-box;
+            color: #fff; /* White text color */
+        }
+        .search-button:hover {
+            background-color: white; /* New background color on hover */
+            color:#A5494D; /* New text color on hover */
+            transition: 0.5s ease;
+            
+        }
+
+        .menu {
+            display: flex;
+            flex-wrap: wrap; /* Allow items to wrap to the next line */
+            justify-content: center;
+            border-top: 1px solid#A5494D; /* Red wine border */
+            border-bottom: 1px solid#A5494D; /* Red wine border */
+            margin: 5px 5px;
+            padding: 5px 5px;
+            
+        }
+
+        .menu button {
+            background-color: transparent;
+            border: none;
+            color: #fff; /* Red wine text color */
+            cursor: pointer;
+            padding: 10px;
+            margin: 10px 15px;
+            border-right: 2px solid #fff;
+            font-size: 20px;
+            font-weight: bold; /* Make the buttons bold */
+        }
+
+
+        .search-bar select, .search-bar input, .search-bar button {
+            margin: 0 5px;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            overflow-y: auto; /* Added overflow-y property for scroll */
+            height: calc(100vh - 80px); /* Adjusted height to fit the viewport */
+        }
+
+        .left-column, .right-column {
+            width: 20%;
+        }
+
+        .center-column {
+            width: 60%;
+        }
+
+
+        .left-section {
+            height: calc(100vh); /* Adjusted to use percentage */
+            width: 15%; /* Adjusted to use percentage */
+            position: fixed;
+            z-index: 0;
+            left: 0.1%;
+            top: 45%;
+            border-right: 1px solid black;
+            text-align: justify;
+            color: black;
+            padding: 10px; /* Added padding for content */
+            background-color:white ;
+        }
+
+        .left-section h3 {
+            color: black;
+            display: block;
+        
+        }
+
+        .right-section {
+            height: calc(100vh); /* Adjusted to use percentage */
+            width: 15%; /* Adjusted to use percentage */
+            position: fixed;
+            background-color:white ;
+            z-index: 0;
+            right: 0%;
+            top: 45%;
+            border-left: 1px solid black;
+            text-align: justify;
+            color: black;
+            padding: 10px; /* Added padding for content */
+        }
+
+        .right-section h3 {
+            color: black;
+            display: block;
+        
+        }
+
+        .center-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+            overflow: hidden; /* Added overflow hidden */
+        }
+
+        .center-section img {
+            margin-top:25%;
+            max-width: 70%;
+            max-height: 87.5%;
+        }
+
+        .overlay {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            top:20%;
+            background: rgba(255, 255, 255, 0.7); /* Adjust the alpha (fourth parameter) for the desired opacity */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color:black;
+}
+
+
+.center-section a{
+    margin-left:45%;
+}
+
+    </style>
+    <script src="https://kit.fontawesome.com/a3c696c988.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <div class="navigation">
+            <div class="logo">
+                <img src="OIP.jpeg" alt="Ashesi Logo">
+                <div class="library-name">WARREN LIBRARY</div>
+                <div class="header-buttons">
+                <button><u>Login</u></button>
+                <button><u>Contact Us</u></button>
+            </div>
+            </div>
+        </div>
+        <br>
+    <div class="tab-bar">
+        <a href="http://127.0.0.1:5500/AshesiLibraryESP32/FrontEnd/Homepage.html" style="text-decoration:none"></a><button class="active">Home</button>
+    </div>
+
+    <div class="search-bar">
+            <select class="box">
+                <option value="title">Title</option>
+                <option value="author">Author</option>
+                <option value="subject">Subject</option>
+                <option value="isbn">ISBN</option>
+                <option value="series">Series</option>
+                <option value="issn">ISSN</option>
+            </select>
+            <input type="text" class="box" placeholder="Search for a book">
+            <select class="box">
+                <option value="all-libraries">All Libraries</option>
+                <option value="ashesi">Ashesi University</option>
+                <option value="others">Others</option>
+            </select>
+            <a href="https://www.ashesi.edu.gh/about/13-academics/library20/79-online-databases-a-z.html" style="text-decoration:none"></a><button class="search-button">Q</button>
+        </div>
+    <div class="menu">
+        <a href="https://www.ashesi.edu.gh/academics/library.html"  target="_blank"  style="text-decoration:none"><button class="menu-item"><u>Advanced Search</u></button></a>
+        <a href="https://www.ashesi.edu.gh/about/13-academics/library20/79-online-databases-a-z.html"  target="_blank"  style="text-decoration:none"><button class="menu-item"><u>E-Collection</u></button></a>
+        <a href="https://at.ashesi.edu.gh/tagged/ashesi-university-college"  target="_blank"  style="text-decoration:none"></a><button class="menu-item"><u>Ashesi Bullentin</u></button></a>
+        <a href="https://www.ashesi.edu.gh/stories-and-events/stories.html"  target="_blank" style="text-decoration:none"></a><button class="menu-item"><u>Recent Stories</u></button></a>
+        <a href="https://air.ashesi.edu.gh/"  target="_blank" style="text-decoration:none"><button class="menu-item"><u>Institutional Repository</u></button></a>
+    </div>
+   </header>
+   <div class="left-section">
+    <h3><i class="fa-solid fa-file" style="color:#A5494D"></i> Library News</h3>
+    <!-- List of news items --> 
+       <i><h4><a href="https://www.linkedin.com/edu/ashesi-university-12820" target="_blank" style="text-decoration: none; color:#A5494D;">Linkedin</a>,<a href="https://instagram.com/ashesi" target="_blank" style="text-decoration: none; color:#A5494D;">Instagram</a>,<a href="https://www.twitter.com/ashesi" target="_blank" style="text-decoration: none; color:#A5494D;">Twitter/X</a></h4></i>
+    <h3><i class="fa-solid fa-circle-info" style="color:#A5494D"></i> General Information</h3>
+    <h4>
+    <ul>
+    <li><a href="http://www.ashesi.edu.gh/academics/library.html"  target="_blank"  style="text-decoration: none; color:#A5494D;">Services Overview</a></li> 
+    <li><a href="http://www.ashesi.edu.gh/academics/library.html"  style="text-decoration: none; color:#A5494D">Orientation/Tour</a></li>
+    <li><a href="https://app.spatial.chat/s/ashesi-virtual-library-support" style="text-decoration: none; color:#A5494D">Virtual Support</a></li>
+    </ul>
+</h4>
+    <h3><i class="fa-brands fa-digital-ocean" style="color:#A5494D"></i> Digital Resources</h3>
+    <h4>
+        <ul style="color:#A5494D;">
+        <li><a href="https://ashesi.libguides.com/"  target="_blank"  style="text-decoration: none; color:#A5494D">LibGuides</a></li> 
+        <li><a href="https://www.ashesi.edu.gh/academics/library.html" style="text-decoration: none; color:#A5494D">On-Campus Access</a></li>
+        <li><a href="https://elibraryashesi.remotexs.co/user/login" style="text-decoration: none; color:#A5494D">Off-Campus Access</a></li>
+        </ul>
+    </h4>
+</div>
+<div class="right-section">
+ <h3><i class="fa-solid fa-book" style="color:#A5494D;"></i> New Books</h3>
+ <a ahref="https://www.ashesi.edu.gh/about/13-academics/library20/79-online-databases-a-z.html" style="text-decoration:none"></a>
+ <h3><i class="fa-solid fa-chalkboard-user" style="color:#A5494D"></i> Tutorials</h3>
+ <h4>
+     <ul style="color:#A5494D;">
+     <li><a href="https://onedrive.live.com/?authkey=%21ADItu5wVWeCYQHk&id=AAFC2C621B3BD507%214463&cid=AAFC2C621B3BD507&parId=root&parQt=sharedby&o=OneUp"  target="_blank"  style="text-decoration: none; color:#A5494D">Using WebPrint</a></li> 
+     <li><a href="https://onedrive.live.com/?authkey=%21AMAxPsNG9AoDRsc&id=AAFC2C621B3BD507%214466&cid=AAFC2C621B3BD507&parId=root&parQt=sharedby&o=OneUp" style="text-decoration: none; color:#A5494D">Using Photocopiers</a></li>
+     <li><a href="https://opacuse.blogspot.com/" style="text-decoration: none; color:#A5494D">Using Student's Account</a></li>
+     <li><a href="https://zoteroupdates.blogspot.com/"  target="_blank"  style="text-decoration: none; color:#A5494D">Zotero Overview</a></li>  
+     </ul>
+ </h4>
+ <h3><i class="fa-solid fa-message" style="color:#A5494D"></i> Contact Us</h3>
+ <h4><ul style="color:#A5494D;">
+    <li>Phone:+233 302610330</li>
+    <li>Email:warrenlibrary
+        @ashesi.edu.gh
+    </li>
+    </ul>
+</h4>
+</div>
+<div class="center-section">
+<img src="library-interior.jpg" alt="Centered Image">
+<div class="overlay">
+    <h2> <i class="fa-solid fa-clock"></i> Library Hours
+    <ul style="color:#A5494D;">
+        <li>Monday - Friday: 08.00 - 17.00 (GMT) 
+    </ul>
+    <a href="https://opac.ashesi.edu.gh/" style="font-size: 20px; text-decoration:underline; color:black">More on working hours<i class="fa-solid fa-right-from-bracket"></i></a>
+</h2>
+
+</div>
+</div>
+</div>
+
+</body>
+</html>
