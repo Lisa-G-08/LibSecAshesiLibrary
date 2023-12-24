@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="icon" href="../Resources/OIP.jpeg" sizes="32x32" />
   </head>
   <style>
     body {
@@ -546,7 +547,7 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-      margin-left: 20%;
+      /* margin-left: 20%; */
     }
 
     table,
@@ -568,179 +569,259 @@
     }
   </style>
   <body>
-    <div id="ProfileViewing">
-      <div class="ViewProfile">
-        <div class="profile">
-          <img id="uploadImage" src="default-image.jpg" alt="Profile Picture" />
-          <div class="separator"></div>
-        </div>
-        <div class="info">
-          <label>First Name:</label>
-          <input type="text" id="fname" class="editable" disabled /><br />
-          <label>Last Name:</label>
-          <input type="text" id="lname" class="editable" disabled /><br />
-          <label>Email:</label>
-          <input type="email" id="email" class="editable" disabled /><br />
-          <label>Phone:</label>
-          <input type="tel" id="phone" class="editable" disabled /><br />
-          <label>Staff ID:</label>
-          <input type="number" id="StaffID" class="editable" disabled /><br />
-          <button id="EditProfile" onclick="EditProfile()">Edit Profile</button>
-          <button
-            type="submit"
-            id="SaveProfile"
-            onclick="SaveProfile()"
-            style="display: none"
+    <!-- Top Menu -->
+    <div id="navbar">
+      <img id="logo" src="../Resources/OIP.jpeg" alt="School Logo" />
+    </div>
+
+    <!-- Book Details -->
+    <!-- <div id="bookDetails">
+      <h2>Book Tracking Details</h2>
+      <p>RFID Tag: <span id="rfidTag">123456</span></p>
+      <p>ISBN: <span id="bookId">123456</span></p>
+      <p>Title: <span id="bookTitle">Sample Book</span></p>
+      <p>Author: <span id="author">John Doe</span></p>
+      <p>Publication Year: <span id="Year">Sample Book</span></p>
+      <p>Author: <span id="book_author">John Doe</span></p>
+      <button id="setOffAlarm" onclick="setOffAlarm()">Set Alarm Off</button>
+    </div> -->
+    <div id="CheckOut">
+      <input
+        type="text"
+        id="CheckOut_"
+        placeholder="Enter book name or RFID value"
+      />
+      <button id="CheckoutFindBook">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <div style="display: flex; flex-direction: row">
+        <table>
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Book RFID</th>
+              <th>Name</th>
+              <th>Subject</th>
+              <th>Librarian</th>
+              <th>Student</th>
+              <th>Duration</th>
+              <th>Approval</th>
+              <th>Buzzer Status</th>
+            </tr>
+          </thead>
+          <tbody id="CheckoutBookList"></tbody>
+        </table>
+
+        <div id="BookInfoDisplayCheckOut">
+          <h2>Book Information</h2>
+          <div id="CheckOutBodyContent"></div>
+
+          <!-- <p><strong>Title:</strong> Another Book Title</p>
+              <p><strong>Author(s):</strong> Another Author Name</p>
+              <p><strong>ISBN:</strong> 0987654321</p>
+              <p><strong>Publication Year:</strong> 2021</p>
+              <p><strong>Availability:</strong> Available</p> -->
+          <label for="CheckOutStudentID" style="font-weight: bold"
+            >Student ID:</label
           >
-            Save Profile
-          </button>
-          <button id="Cancel" onclick="Cancel(event)" style="display: none">
-            <i class="fa-solid fa-ban"></i> Cancel
+          <input type="text" id="CheckOutStudentID" name="title" /><br /><br />
+          <!-- <label for="duration" style="font-weight: bold"
+              >Borrow Duration:</label
+            > -->
+          <!-- <select id="duration" style="height: 20px; width: 150px" name="title">
+              <option value="" disabled selected hidden>Duration</option>
+              <option value="oneDay">1 day</option>
+              <option value="oneWeek">1 week</option>
+              <option value="thirtyDays">30 days</option>
+            </select> -->
+          <!-- <input type="text" id="duration" name="title" /><br /><br /> -->
+          <button onclick="CheckoutEditBook()" id="CheckOutButton">
+            Turn off buzzer
           </button>
         </div>
       </div>
     </div>
-  </body>
-  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCzSMSm6ZHGoLGA7AToiIMHByDFz9yIIbk",
-      authDomain: "ashesilibraryesp32-fd5b8.firebaseapp.com",
-      databaseURL:
-        "https://ashesilibraryesp32-fd5b8-default-rtdb.firebaseio.com",
-      projectId: "ashesilibraryesp32-fd5b8",
-      storageBucket: "ashesilibraryesp32-fd5b8.appspot.com",
-      messagingSenderId: "185836313770",
-      appId: "1:185836313770:web:ff9137a24273f2ed0844d3",
-      measurementId: "G-J8PWV52BJE",
-    };
+    <script
+      src="https://kit.fontawesome.com/a3c696c988.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyCzSMSm6ZHGoLGA7AToiIMHByDFz9yIIbk",
+        authDomain: "ashesilibraryesp32-fd5b8.firebaseapp.com",
+        databaseURL:
+          "https://ashesilibraryesp32-fd5b8-default-rtdb.firebaseio.com",
+        projectId: "ashesilibraryesp32-fd5b8",
+        storageBucket: "ashesilibraryesp32-fd5b8.appspot.com",
+        messagingSenderId: "185836313770",
+        appId: "1:185836313770:web:ff9137a24273f2ed0844d3",
+        measurementId: "G-J8PWV52BJE",
+      };
 
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    function EditProfile() {
-      var inputs = document.querySelectorAll(".editable[disabled]");
-      // Loop through each input and enable it
-      inputs.forEach(function (input) {
-        input.removeAttribute("disabled");
-        input.style.border = "1px solid #A5494D"; // Set border style using JavaScript
-      });
+      firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
 
-      document.getElementById("EditProfile").style.display = "none";
-      document.getElementById("SaveProfile").style.display = "inline-block";
-      document.getElementById("Cancel").style.display = "inline-block";
-    }
+      let CheckoutSelectedBookKeys = [];
 
-    function SaveProfile() {
-      var fname = document.getElementById("fname").value;
-      var lname = document.getElementById("lname").value;
-      var StaffID = document.getElementById("StaffID").value;
-      var email = document.getElementById("email").value;
-      var phone = document.getElementById("phone").value;
+      function CheckoutDisplayBooks() {
+        const CheckoutBookListTable =
+          document.getElementById("CheckoutBookList");
+        CheckoutBookListTable.innerHTML = "";
 
-      // Retrieve librarianPassword from the "librarianPassword" cookie
-      var userID = getCookie("librarianPassword");
-
-      database
-        .ref(`Librarians/${userID}`)
-        .update({
-          fname: fname,
-          lname: lname,
-          StaffID: StaffID,
-          email: email,
-          phone: phone,
-        })
-        .then(() => {
-          // Display users after saving profile
-          displayUsers();
-
-          // Disable inputs after saving
-          var inputs = document.querySelectorAll(".editable:not([disabled])");
-          inputs.forEach(function (input) {
-            input.setAttribute("disabled", "disabled");
-            input.style.border = "0";
-          });
-
-          document.getElementById("EditProfile").style.display = "block";
-          document.getElementById("SaveProfile").style.display = "none";
-          document.getElementById("Cancel").style.display = "none";
-        })
-        .catch((error) => {
-          console.error("Error updating profile:", error);
-        });
-    }
-
-    function Cancel(event) {
-      event.preventDefault(); // Prevent the default form submission behavior
-      document.getElementById("EditProfile").style.display = "block";
-      document.getElementById("SaveProfile").style.display = "none";
-      document.getElementById("Cancel").style.display = "none";
-
-      var inputs = document.querySelectorAll(".editable:not([disabled])");
-      inputs.forEach(function (input) {
-        input.setAttribute("disabled", "disabled");
-        input.style.border = "0";
-      });
-    }
-
-    function editUser(userType, userID, userEmail) {
-      const newEmail = window.prompt(
-        `Current Email: ${userEmail}\nEnter new Email:`
-      );
-
-      if (newEmail !== null) {
-        database.ref(`${userType}s/${userID}`).update({
-          email: newEmail,
-        });
-
-        displayUsers();
-      }
-    }
-
-    function displayUsers() {
-      const fname = document.getElementById("fname");
-      const lname = document.getElementById("lname");
-      const StaffID = document.getElementById("StaffID");
-      const email = document.getElementById("email");
-      const phone = document.getElementById("phone");
-
-      const userTypes = ["Librarian"];
-      userTypes.forEach((userType) => {
         database
-          .ref(`${userType}s`)
+          .ref("LibraryRecords")
           .once("value")
           .then((snapshot) => {
-            snapshot.forEach((user) => {
-              const userData = user.val();
-              fname.value = userData.fname || "";
-              lname.value = userData.lname || "";
-              StaffID.value = userData.StaffID || "";
-              email.value = userData.email || "";
-              phone.value = userData.phone || "";
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              // Use unique IDs for each checkbox
+              const checkboxId = `CheckBox_${book.key}`;
+              row.innerHTML = `
+    <td><input type="checkbox" id="${checkboxId}" onchange="CheckoutUpdateSelectedBooks('${book.key}')"/></td>
+    <td>${book.key}</td>
+    <td>${bookData.name}</td>
+    <td>${bookData.subject}</td>
+    <td>${bookData.assignedLibrarian}</td>
+    <td>${bookData.assignedStudent}</td>
+    <td>${bookData.assignedDuration}</td>
+    <td>${bookData.approval}</td>
+    <td>${bookData.buzzerStatus}</td>
+
+
+  `;
+              CheckoutBookListTable.appendChild(row);
             });
           });
-      });
-    }
+      }
 
-    displayUsers();
-    function getCookie(name) {
-      const cookieName = `${name}=`;
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        let cookie = cookies[i].trim();
-        if (cookie.indexOf(cookieName) === 0) {
-          return cookie.substring(cookieName.length, cookie.length);
+      // Update the array of selected book keys
+      function CheckoutUpdateSelectedBooks(bookKey) {
+        const checkbox = document.getElementById(`CheckBox_${bookKey}`);
+        if (checkbox.checked) {
+          // Add the book key to the array
+          CheckoutSelectedBookKeys.push(bookKey);
+          CheckoutDisplayCard();
+        } else {
+          // Remove the book key from the array
+          CheckoutSelectedBookKeys = CheckoutSelectedBookKeys.filter(
+            (key) => key !== bookKey
+          );
+          CheckoutDisplayCard();
         }
       }
-      return null;
-    }
 
-    // Example of how to retrieve the password
-    document.addEventListener("DOMContentLoaded", function () {
-      const librarianPassword = getCookie("librarianPassword");
-      if (librarianPassword) {
-        console.log("Librarian Password:", librarianPassword);
+      function CheckoutEditBook() {
+        console.log(CheckoutSelectedBookKeys);
+        for (let i = 0; i < CheckoutSelectedBookKeys.length; i++) {
+          const bookRFID = CheckoutSelectedBookKeys[i];
+          const assignedStudent =
+            document.getElementById("CheckOutStudentID").value;
+          const assignedDuration = "N/A";
+
+          const newbuzzerStatus = "true";
+          const assignedLibrarian = "TestLibrarian";
+
+          if (assignedStudent && assignedDuration) {
+            database.ref(`LibraryRecords/${bookRFID}`).update({
+              assignedStudent: assignedStudent,
+              assignedDuration: assignedDuration,
+              assignedLibrarian: assignedLibrarian,
+              buzzerStatus: newbuzzerStatus.toLowerCase() === "false",
+            });
+
+            // Assuming CheckoutDisplayBooks is a function to update the UI, you may call it here
+          } else {
+            alert("Please enter a valid student ID and duration");
+          }
+        }
+        CheckoutDisplayBooks();
+        CheckoutDisplayCard();
       }
-    });
-  </script>
+      function CheckoutDisplayCard() {
+        const cardValue = document.getElementById("CheckOutBodyContent");
+        cardValue.innerHTML = "";
+
+        // Display information only for the selected books
+        CheckoutSelectedBookKeys.forEach((bookKey) => {
+          database
+            .ref(`LibraryRecords/${bookKey}`)
+            .once("value")
+            .then((snapshot) => {
+              const bookData = snapshot.val();
+              const row = document.createElement("div");
+              row.innerHTML = `
+    <p id="bookRFID"><strong>bookRFID:</strong> ${bookKey}</p>
+    <p id="bookName"><strong>bookName:</strong> ${bookData.name}</p>
+    <p id="bookSubject"><strong>bookSubject:</strong> ${bookData.subject}</p>
+    <p id="approval"><strong>approval:</strong> ${bookData.approval}</p>
+  `;
+              cardValue.appendChild(row);
+            });
+        });
+      }
+
+      function CheckoutDisplayBooks() {
+        const CheckoutBookListTable =
+          document.getElementById("CheckoutBookList");
+        const filterInput = document
+          .getElementById("CheckOut_")
+          .value.toLowerCase(); // Get the filter input value
+
+        CheckoutBookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              const bookName = bookData.name.toLowerCase(); // Convert book name to lowercase for case-insensitive search
+              const bookRFID = book.key.toLowerCase(); // Convert book RFID to lowercase for case-insensitive search
+
+              // Check if the filterInput is empty or matches the book name or RFID
+              if (
+                (filterInput === "" ||
+                  bookName.includes(filterInput) ||
+                  bookRFID.includes(filterInput)) &&
+                !bookData.approval &&
+                bookData.buzzerStatus
+              ) {
+                const checkboxId = `CheckBox_${book.key}`;
+                row.innerHTML = `
+                                  <td><input type="checkbox" id="${checkboxId}" onchange="CheckoutUpdateSelectedBooks('${book.key}')"/></td>
+                                  <td>${book.key}</td>
+                                  <td>${bookData.name}</td>
+                                  <td>${bookData.subject}</td>
+                                  <td>${bookData.assignedLibrarian}</td>
+                                  <td>${bookData.assignedStudent}</td>
+                                  <td>${bookData.assignedDuration}</td>
+                                  <td>${bookData.approval}</td>
+                                  <td>${bookData.buzzerStatus}</td>
+
+                                `;
+                CheckoutBookListTable.appendChild(row);
+              }
+            });
+          });
+      }
+
+      // Add an event listener for the CheckoutFindBook button to trigger the CheckoutDisplayBooks function
+      document
+        .getElementById("CheckoutFindBook")
+        .addEventListener("click", CheckoutDisplayBooks);
+
+      CheckoutDisplayBooks();
+      CheckoutDisplayCard();
+
+      function setOffAlarm() {
+        alert("Alarm set off! Taking appropriate action...");
+      }
+    </script>
+  </body>
 </html>

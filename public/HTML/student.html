@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../Resources/OIP.jpeg" sizes="32x32" />
+
+    <title>Ashesi - Warren Library Student Page</title>
+    <script
+      src="https://kit.fontawesome.com/a3c696c988.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- CSS code-->
+    <style>
+      body {
+        margin: 0;
+        font-family: "Times New Roman", sans-serif;
+        background-color: #ffffff; /* Set background color for the body */
+      }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+      #ViewCatalog_ {
+        margin: 50px auto;
+        margin-top: 10%;
+        margin-left: 30%;
+        padding: 10px;
+        width: 40%; /* Set a standard width for the input */
+        box-sizing: border-box;
+        margin-bottom: 5px; /* Add a little space between the input and button */
+      }
+
+      #ViewCatalogButton,
+      #SearchButton {
+        margin: 5px;
+        padding: 10px;
+        width: 150px;
+        background-color: #a5494d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      button {
+        margin-top: 10px;
+        padding: 8px;
+        cursor: pointer;
+      }
+      #navbar {
+        background-color: #a5494d;
+        padding: 10px;
+        text-align: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+      }
+
+      #logo {
+        max-height: 10%;
+        max-width: 6%;
+        width: auto; /* Make width auto for responsiveness */
+        float: left;
+      }
+
+      #navbar a {
+        color: white;
+        padding: 14px 16px;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      #navbar a:hover {
+        background-color: #ddd;
+        color: black;
+      }
+
+      #sidenav {
+        height: calc(100vh); /* Adjusted to use percentage */
+        width: 15%; /* Adjusted to use percentage */
+        position: fixed;
+        z-index: 0;
+        left: 2%;
+        top: 15%;
+        background-color: #ffffff;
+        border-right: 2px solid black;
+        text-align: justify;
+      }
+
+      #sidenav a {
+        padding: 15px 8px;
+        text-decoration: none;
+        font-size: 18px;
+        color: black;
+        display: block;
+      }
+
+      #sidenav a:hover {
+        color: #a5494d;
+      }
+
+      /* Style for the content area */
+      #content {
+        margin-left: 17%; /* Adjusted to use percentage */
+        padding: 16px;
+      }
+
+      .ViewProfile {
+        width: 600px;
+        margin: 50px auto;
+        margin-top: 10%;
+        background-color: #d9d9d9; /* Grey background color for the container */
+        padding: 20px;
+        border: 2px solid #999; /* Border color for the container */
+        border-radius: 8px; /* Border radius for rounded corners */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle effect */
+        display: flex;
+        align-items: center; /* Center vertically within the container */
+      }
+
+      .profile {
+        display: flex;
+        align-items: flex-start; /* Align items to the start (top) within the profile div */
+      }
+
+      .profile img {
+        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+        margin-right: 20px;
+      }
+
+      .separator {
+        border-left: 2px solid #999; /* Border color for the separator line */
+        margin-right: 20px;
+        height: 200px; /* Adjust height to match profile image */
+      }
+
+      .info label {
+        font-weight: bold;
+        margin-bottom: 9px; /* Add space between different label-value pairs */
+        display: inline-block; /* Ensure each label-value pair is on the same line */
+        width: 90px; /* Adjust the width as needed */
+      }
+      #fname,
+      #lname,
+      #StudentID,
+      #className,
+      #major,
+      #email,
+      #phone {
+        background-color: #d9d9d9;
+        border: 0px;
+        font-size: 16px;
+        font-family: Times New Roman;
+      }
+      #EditProfile {
+        width: 180px;
+        height: 30px;
+        background-color: #a5494d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block;
+      }
+      #SaveProfile,
+      #Cancel {
+        width: 150px;
+        height: 30px;
+        background-color: #a5494d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-block;
+      }
+
+      @media only screen and (max-width: 768px) {
+        .ViewProfile {
+          width: 90%; /* Adjust the width for smaller screens */
+        }
+      }
+
+      #ViewCatalog,
+      #BorrowedBooks {
+        margin-top: 10%;
+      }
+
+      #Catalog,
+      #booksTable {
+        width: 75%;
+        margin: 20px auto;
+        margin-left: 20%;
+        border-collapse: collapse;
+        border: 2px solid #a5494d;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      }
+
+      #Catalog th,
+      #Catalog td,
+      #booksTable th,
+      #booksTable td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+      }
+
+      #Catalog th,
+      #booksTable th {
+        background-color: #a5494d;
+        color: white;
+        font-weight: bold;
+      }
+
+      #Catalog tbody tr:nth-child(even),
+      #booksTable tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      #Catalog tbody tr:hover,
+      #booksTable tbody tr:hover {
+        background-color: #ddd;
+      }
+
+      #BookSearch {
+        margin: 50px auto;
+        margin-left: 40%;
+        padding: 10px;
+        width: 40%; /* Set a standard width for the input */
+        box-sizing: border-box;
+        margin-bottom: 5px; /* Add a little space between the input and button */
+      }
+
+      #BookSearchButton {
+        margin: 5px;
+        padding: 10px;
+        width: 150px;
+        background-color: #a5494d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #BorrowedBooks h2 {
+        color: #a5494d;
+        text-align: center;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+      <img id="logo" src="../Resources/OIP.jpeg" alt="School Logo" />
+      <h1 style="color: white">WARREN LIBRARY | STUDENT</h1>
+    </div>
+
+    <!-- Side Navigation -->
+    <div id="sidenav">
+      <a href="#" id="Profile_txt" onclick="toggleViewProfile()">
+        <i class="fas fa-user-alt"></i>
+        Profile</a
+      >
+
+      <a href="#" id="SearchBook_txt" onclick="toggleSearchBook()">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        Search Book
+      </a>
+
+      <a href="#" id="BorrowedBooks_txt" onclick="toggleViewBorrowedBooks()">
+        <i class="fas fa-list-check"></i>
+        Borrowed Books</a
+      >
+
+      <a
+        href="https://invence.ashesi.local:9192/user"
+        style="text-decoration: none"
+      >
+        <i class="fa-solid fa-print"></i>
+        Web Print
+      </a>
+
+      <a
+        href="https://warrenlibraryseminarroom.simplybook.me/v2/"
+        style="text-decoration: none"
+      >
+        <i class="fa-solid fa-house"></i>
+        Booking Room
+      </a>
+
+      <a href="../index.html">
+        <i class="fas fa-power-off"></i>
+        Log Out</a
+      >
+    </div>
+
+    <!--Profile-->
+    <div id="ProfileViewing">
+      <div class="ViewProfile">
+        <div class="profile">
+          <img
+            id="uploadImage"
+            src="../Resources/default-image.jpg"
+            alt="Profile Picture"
+          />
+          <div class="separator"></div>
+        </div>
+        <div class="info">
+          <label>First Name:</label>
+          <input type="text" id="fname" class="editable" disabled /><br />
+          <label>Last Name:</label>
+          <input type="text" id="lname" class="editable" disabled /><br />
+          <label>Student ID:</label>
+          <input type="number" id="StudentID" disabled /><br />
+          <label>Class:</label>
+          <input type="number" id="className" class="editable" disabled /><br />
+          <label>Major:</label>
+          <input type="text" id="major" class="editable" disabled /><br />
+          <label>Email:</label>
+          <input type="email" id="email" disabled /><br />
+          <label>Phone:</label>
+          <input type="tel" id="phone" class="editable" disabled /><br />
+          <button id="EditProfile" onclick="EditProfile()">Edit Profile</button>
+          <button
+            id="SaveProfile"
+            onclick="SaveProfile()"
+            style="display: none"
+          >
+            Save Profile
+          </button>
+          <button id="Cancel" onclick="Cancel()" style="display: none">
+            <i class="fa-solid fa-ban"></i> Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Check Out-->
+    <div id="ViewCatalog" style="display: none; padding-left: 20%">
+      <input
+        type="text"
+        id="ViewCatalog_"
+        placeholder="Enter book name or RFID value"
+      />
+      <button id="ViewCatalogFindBook">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <div style="display: flex; flex-direction: row">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Subject</th>
+              <th>Librarian</th>
+              <th>Student</th>
+              <th>Duration</th>
+              <th>Approval</th>
+            </tr>
+          </thead>
+          <tbody id="ViewCatalogBookList"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!--- Borrowed Books --->
+    <div id="BorrowedBooks" style="display: none">
+      <h2>Borrowed Books:</h2>
+      <table id="booksTable">
+        <thead>
+          <tr>
+            <th>Borrow Date</th>
+            <th>BookId</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publication Year</th>
+            <th>Return Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2023-12-10</td>
+            <td>2020167</td>
+            <td>Introduction to Data Structures</td>
+            <td>Ellie Mathews</td>
+            <td>2009</td>
+            <td>2023-12-20</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
+
+    <script>
+      let prevActiveItemID = "ProfileViewing";
+      let prevActiveTextID = "Profile_txt";
+      document.getElementById(prevActiveTextID).style.color = "#A5494D";
+
+      function toggleMenu(contentID, clickedElement) {
+        var activeItem = document.getElementById(contentID);
+        var clickedText = document.getElementById(clickedElement);
+
+        if (prevActiveItemID) {
+          document.getElementById(prevActiveItemID).style.display = "none";
+          document.getElementById(prevActiveTextID).style.color = "black";
+        }
+
+        activeItem.style.display =
+          activeItem.style.display === "none" || activeItem.style.display === ""
+            ? "block"
+            : "none";
+
+        if (activeItem.style.display === "block") {
+          clickedText.style.color = "#A5494D";
+        }
+
+        prevActiveItemID = contentID;
+        prevActiveTextID = clickedElement;
+      }
+
+      function toggleSearchBook() {
+        toggleMenu("ViewCatalog", "SearchBook_txt");
+      }
+
+      function toggleViewProfile() {
+        toggleMenu("ProfileViewing", "Profile_txt");
+      }
+
+      function toggleViewBorrowedBooks() {
+        toggleMenu("BorrowedBooks", "BorrowedBooks_txt");
+      }
+
+      // function EditProfile() {
+      //   var inputs = document.querySelectorAll(".editable[disabled]");
+      //   // Loop through each input and enable it
+      //   inputs.forEach(function (input) {
+      //     input.removeAttribute("disabled");
+      //     input.style.border = "1px solid #A5494D"; // Set border style using JavaScript
+      //   });
+
+      //   document.getElementById("EditProfile").style.display = "none";
+      //   document.getElementById("SaveProfile").style.display = "inline-block";
+      //   document.getElementById("Cancel").style.display = "inline-block";
+      // }
+
+      // function Cancel() {
+      //   document.getElementById("EditProfile").style.display = "block";
+      //   document.getElementById("SaveProfile").style.display = "none";
+      //   document.getElementById("Cancel").style.display = "none";
+
+      //   var inputs = document.querySelectorAll(".editable:not([disabled])");
+      //   inputs.forEach(function (input) {
+      //     input.setAttribute("disabled", "disabled");
+      //     input.style.border = "0";
+      //   });
+      // }
+      function getCookie(name) {
+        const cookieName = `${name}=`;
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i].trim();
+          if (cookie.indexOf(cookieName) === 0) {
+            return cookie.substring(cookieName.length, cookie.length);
+          }
+        }
+        return null;
+      }
+      document.addEventListener("DOMContentLoaded", function () {
+        const studentEmail = getCookie("studentEmail");
+        if (studentEmail) {
+          console.log("student Email:", studentEmail);
+        }
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        const studentPassword = getCookie("studentPassword");
+        if (studentPassword) {
+          console.log("student password:", studentPassword);
+        }
+      });
+      const firebaseConfig = {
+        apiKey: "AIzaSyCzSMSm6ZHGoLGA7AToiIMHByDFz9yIIbk",
+        authDomain: "ashesilibraryesp32-fd5b8.firebaseapp.com",
+        databaseURL:
+          "https://ashesilibraryesp32-fd5b8-default-rtdb.firebaseio.com",
+        projectId: "ashesilibraryesp32-fd5b8",
+        storageBucket: "ashesilibraryesp32-fd5b8.appspot.com",
+        messagingSenderId: "185836313770",
+        appId: "1:185836313770:web:ff9137a24273f2ed0844d3",
+        measurementId: "G-J8PWV52BJE",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+
+      function EditProfile() {
+        var inputs = document.querySelectorAll(".editable[disabled]");
+        // Loop through each input and enable it
+        inputs.forEach(function (input) {
+          input.removeAttribute("disabled");
+          input.style.border = "1px solid #A5494D"; // Set border style using JavaScript
+        });
+
+        document.getElementById("EditProfile").style.display = "none";
+        document.getElementById("SaveProfile").style.display = "inline-block";
+        document.getElementById("Cancel").style.display = "inline-block";
+      }
+
+      function SaveProfile() {
+        var fname = document.getElementById("fname").value;
+        var lname = document.getElementById("lname").value;
+        var StudentID = getCookie("studentPassword");
+        var className = document.getElementById("className").value;
+        var major = document.getElementById("major").value;
+        var email = getCookie("studentEmail");
+        var phone = document.getElementById("phone").value;
+
+        // Get the user ID from the cookie
+        var userID = getCookie("studentPassword");
+
+        // Reference to the user's data in the Firebase database
+        var userRef = database.ref(`Students/${userID}`);
+
+        // Use the update method to update specific fields in the database
+        userRef
+          .update({
+            fname: fname,
+            lname: lname,
+            StudentID: StudentID,
+            className: className,
+            major: major,
+            // email: email,
+            phone: phone,
+          })
+          .then(() => {
+            // Display users after saving profile
+            displayUsers();
+
+            // Disable inputs after saving
+            var inputs = document.querySelectorAll(".editable:not([disabled])");
+            inputs.forEach(function (input) {
+              input.setAttribute("disabled", "disabled");
+              input.style.border = "0";
+            });
+
+            document.getElementById("EditProfile").style.display = "block";
+            document.getElementById("SaveProfile").style.display = "none";
+            document.getElementById("Cancel").style.display = "none";
+          })
+          .catch((error) => {
+            console.error("Error updating profile:", error.message);
+            // Handle the error as needed
+          });
+      }
+
+      function Cancel(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+        document.getElementById("EditProfile").style.display = "block";
+        document.getElementById("SaveProfile").style.display = "none";
+        document.getElementById("Cancel").style.display = "none";
+
+        var inputs = document.querySelectorAll(".editable:not([disabled])");
+        inputs.forEach(function (input) {
+          input.setAttribute("disabled", "disabled");
+          input.style.border = "0";
+        });
+      }
+
+      function editUser(userType, userID, userEmail) {
+        const newEmail = window.prompt(
+          `Current Email: ${userEmail}\nEnter new Email:`
+        );
+
+        if (newEmail !== null) {
+          database.ref(`${userType}s/${userID}`).update({
+            email: newEmail,
+          });
+
+          displayUsers();
+        }
+      }
+
+      function displayUsers() {
+        const fname = document.getElementById("fname");
+        const lname = document.getElementById("lname");
+        const StudentID = document.getElementById("StudentID");
+        const className = document.getElementById("className");
+        const major = document.getElementById("major");
+        const email = document.getElementById("email");
+        const phone = document.getElementById("phone");
+
+        const userTypes = ["Student"];
+        userTypes.forEach((userType) => {
+          database
+            .ref(`${userType}s`)
+            .once("value")
+            .then((snapshot) => {
+              snapshot.forEach((user) => {
+                const userData = user.val();
+                fname.value = userData.fname || "";
+                lname.value = userData.lname || "";
+                StudentID.value = userData.StudentID || "";
+                className.value = userData.className || "";
+                major.value = userData.major || "";
+                email.value = userData.email || "";
+                phone.value = userData.phone || "";
+              });
+            });
+        });
+      }
+
+      displayUsers();
+
+      let ViewCatalogSelectedBookKeys = [];
+
+      function ViewCatalogDisplayBooks() {
+        const ViewCatalogBookListTable = document.getElementById(
+          "ViewCatalogBookList"
+        );
+        ViewCatalogBookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              // Use unique IDs for each checkbox
+              const checkboxId = `CheckBox_${book.key}`;
+              row.innerHTML = `
+          <td><input type="checkbox" id="${checkboxId}" onchange="ViewCatalogUpdateSelectedBooks('${book.key}')"/></td>
+          <td>${book.key}</td>
+          <td>${bookData.name}</td>
+          <td>${bookData.subject}</td>
+          <td>${bookData.assignedLibrarian}</td>
+          <td>${bookData.assignedStudent}</td>
+          <td>${bookData.assignedDuration}</td>
+          <td>${bookData.approval}</td>
+
+        `;
+              ViewCatalogBookListTable.appendChild(row);
+            });
+          });
+      }
+
+      // Update the array of selected book keys
+      function ViewCatalogUpdateSelectedBooks(bookKey) {
+        const checkbox = document.getElementById(`CheckBox_${bookKey}`);
+        if (checkbox.checked) {
+          // Add the book key to the array
+          ViewCatalogSelectedBookKeys.push(bookKey);
+          ViewCatalogDisplayCard();
+        } else {
+          // Remove the book key from the array
+          ViewCatalogSelectedBookKeys = ViewCatalogSelectedBookKeys.filter(
+            (key) => key !== bookKey
+          );
+          ViewCatalogDisplayCard();
+        }
+      }
+
+      function ViewCatalogEditBook() {
+        console.log(ViewCatalogSelectedBookKeys);
+        for (let i = 0; i < ViewCatalogSelectedBookKeys.length; i++) {
+          const bookRFID = ViewCatalogSelectedBookKeys[i];
+          const assignedStudent = document.getElementById(
+            "ViewCatalogStudentID"
+          ).value;
+          const assignedDuration = "N/A";
+
+          const newApproval = "false";
+          const assignedLibrarian = getCookie("librarianEmail");
+
+          if (assignedStudent && assignedDuration) {
+            database.ref(`LibraryRecords/${bookRFID}`).update({
+              assignedStudent: assignedStudent,
+              assignedDuration: assignedDuration,
+              assignedLibrarian: assignedLibrarian,
+              approval: newApproval.toLowerCase() === "true",
+            });
+
+            // Assuming ViewCatalogDisplayBooks is a function to update the UI, you may call it here
+          } else {
+            alert("Please enter a valid student ID and duration");
+          }
+        }
+        ViewCatalogDisplayBooks();
+        ViewCatalogDisplayCard();
+      }
+      function ViewCatalogDisplayCard() {
+        const cardValue = document.getElementById("ViewCatalogBodyContent");
+        cardValue.innerHTML = "";
+
+        // Display information only for the selected books
+        ViewCatalogSelectedBookKeys.forEach((bookKey) => {
+          database
+            .ref(`LibraryRecords/${bookKey}`)
+            .once("value")
+            .then((snapshot) => {
+              const bookData = snapshot.val();
+              const row = document.createElement("div");
+              row.innerHTML = `
+          <p id="bookRFID"><strong>bookRFID:</strong> ${bookKey}</p>
+          <p id="bookName"><strong>bookName:</strong> ${bookData.name}</p>
+          <p id="bookSubject"><strong>bookSubject:</strong> ${bookData.subject}</p>
+          <p id="approval"><strong>approval:</strong> ${bookData.approval}</p>
+        `;
+              cardValue.appendChild(row);
+            });
+        });
+      }
+
+      function ViewCatalogDisplayBooks() {
+        const ViewCatalogBookListTable = document.getElementById(
+          "ViewCatalogBookList"
+        );
+        const filterInput = document
+          .getElementById("ViewCatalog_")
+          .value.toLowerCase(); // Get the filter input value
+
+        ViewCatalogBookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              const bookName = bookData.name.toLowerCase(); // Convert book name to lowercase for case-insensitive search
+              const bookRFID = book.key.toLowerCase(); // Convert book RFID to lowercase for case-insensitive search
+
+              // Check if the filterInput is empty or matches the book name or RFID
+              if (
+                filterInput === "" ||
+                bookName.includes(filterInput) ||
+                bookRFID.includes(filterInput)
+                //   &&
+                // bookData.approval
+              ) {
+                const checkboxId = `CheckBox_${book.key}`;
+                row.innerHTML = `
+            <td style="display: none">${book.key}</td>
+            <td>${bookData.name}</td>
+            <td>${bookData.subject}</td>
+            <td>${bookData.assignedLibrarian}</td>
+            <td>${bookData.assignedStudent}</td>
+            <td>${bookData.assignedDuration}</td>
+            <td>${bookData.approval}</td>
+          `;
+                ViewCatalogBookListTable.appendChild(row);
+              }
+            });
+          });
+      }
+
+      // Add an event listener for the ViewCatalogFindBook button to trigger the ViewCatalogDisplayBooks function
+      document
+        .getElementById("ViewCatalogFindBook")
+        .addEventListener("click", ViewCatalogDisplayBooks);
+
+      ViewCatalogDisplayBooks();
+      ViewCatalogDisplayCard();
+    </script>
+  </body>
+</html>

@@ -4,12 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ashesi - Warren Library Admin</title>
+
     <script
       src="https://kit.fontawesome.com/a3c696c988.js"
       crossorigin="anonymous"
     ></script>
     <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
+    <!-- Favicon -->
+    <link rel="icon" href="../Resources/OIP.jpeg" sizes="32x32" />
 
     <style>
       body {
@@ -519,12 +522,23 @@
         font-weight: bold;
       }
 
-      #BookInfoDisplayCheckOut,
+      #BookInfoDisplayCheckOut {
+        width: 30%;
+        text-align: center;
+        margin-top: 20px;
+        margin-left: 2%;
+        padding: 20px;
+        background-color: #ddd;
+        border: 1px solid #a5494d;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
       #BookInfoDisplayCheckIn {
         width: 30%;
         text-align: center;
         margin-top: 20px;
-        margin-left: 5%;
+        margin-left: 2%;
         padding: 20px;
         background-color: #ddd;
         border: 1px solid #a5494d;
@@ -576,7 +590,7 @@
   </head>
   <body>
     <div id="navbar">
-      <img id="logo" src="OIP.jpeg" alt="School Logo" />
+      <img id="logo" src="../Resources/OIP.jpeg" alt="School Logo" />
       <h1 style="color: white">WARREN LIBRARY | LIBRARIAN</h1>
     </div>
 
@@ -620,10 +634,10 @@
       </a>
       <a href="booktracking.html" id="Notifications_txt" target="_blank">
         <i class="fa-solid fa-circle-exclamation"></i>
-        Book tracking
+        Book Tracking Logs
       </a>
 
-      <a href="index.html">
+      <a href="../index.html">
         <i class="fas fa-power-off"></i>
         Log Out</a
       >
@@ -632,7 +646,11 @@
     <div id="ProfileViewing">
       <div class="ViewProfile">
         <div class="profile">
-          <img id="uploadImage" src="default-image.jpg" alt="Profile Picture" />
+          <img
+            id="uploadImage"
+            src="../Resources/default-image.jpg"
+            alt="Profile Picture"
+          />
           <div class="separator"></div>
         </div>
         <div class="info">
@@ -641,11 +659,11 @@
           <label>Last Name:</label>
           <input type="text" id="lname" class="editable" disabled /><br />
           <label>Email:</label>
-          <input type="email" id="email" class="editable" disabled /><br />
+          <input type="email" id="email" disabled /><br />
           <label>Phone:</label>
           <input type="tel" id="phone" class="editable" disabled /><br />
           <label>Staff ID:</label>
-          <input type="number" id="StaffID" class="editable" disabled /><br />
+          <input type="number" id="StaffID" disabled /><br />
           <button id="EditProfile" onclick="EditProfile()">Edit Profile</button>
           <button
             type="submit"
@@ -672,7 +690,7 @@
       <button id="FindBook">
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>
-      <div style="display: flex; flex-direction: row">
+      <div style="display: flex; flex-direction: row; width: 85%">
         <table>
           <thead>
             <tr>
@@ -1244,34 +1262,44 @@
       function SaveProfile() {
         var fname = document.getElementById("fname").value;
         var lname = document.getElementById("lname").value;
-        var StaffID = document.getElementById("StaffID").value;
+        var StaffID = getCookie("librarianPassword");
         var email = document.getElementById("email").value;
         var phone = document.getElementById("phone").value;
 
-        // Assuming you have a user ID, you need to replace "userID" with the actual user ID
-        var userID = "userID";
+        // Get the user ID from the cookie
+        var userID = getCookie("librarianPassword");
 
-        database.ref(`Librarians/${userID}`).update({
-          fname: fname,
-          lname: lname,
-          StaffID: StaffID,
-          email: email,
-          phone: phone,
-        });
+        // Reference to the user's data in the Firebase database
+        var userRef = database.ref(`Librarians/${userID}`);
 
-        // Display users after saving profile
-        displayUsers();
+        // Use the update method to update specific fields in the database
+        userRef
+          .update({
+            fname: fname,
+            lname: lname,
+            StaffID: StaffID,
+            // email: email,
+            phone: phone,
+          })
+          .then(() => {
+            // Display users after saving profile
+            displayUsers();
 
-        // Disable inputs after saving
-        var inputs = document.querySelectorAll(".editable:not([disabled])");
-        inputs.forEach(function (input) {
-          input.setAttribute("disabled", "disabled");
-          input.style.border = "0";
-        });
+            // Disable inputs after saving
+            var inputs = document.querySelectorAll(".editable:not([disabled])");
+            inputs.forEach(function (input) {
+              input.setAttribute("disabled", "disabled");
+              input.style.border = "0";
+            });
 
-        document.getElementById("EditProfile").style.display = "block";
-        document.getElementById("SaveProfile").style.display = "none";
-        document.getElementById("Cancel").style.display = "none";
+            document.getElementById("EditProfile").style.display = "block";
+            document.getElementById("SaveProfile").style.display = "none";
+            document.getElementById("Cancel").style.display = "none";
+          })
+          .catch((error) => {
+            console.error("Error updating profile:", error.message);
+            // Handle the error as needed
+          });
       }
 
       function Cancel(event) {
@@ -1327,6 +1355,31 @@
       }
 
       displayUsers();
+      function getCookie(name) {
+        const cookieName = `${name}=`;
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i].trim();
+          if (cookie.indexOf(cookieName) === 0) {
+            return cookie.substring(cookieName.length, cookie.length);
+          }
+        }
+        return null;
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const librarianEmail = getCookie("librarianEmail");
+        if (librarianEmail) {
+          console.log("Librarian Email:", librarianEmail);
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const librarianPassword = getCookie("librarianPassword");
+        if (librarianPassword) {
+          console.log("Librarian Email:", librarianPassword);
+        }
+      });
 
       let selectedBookKeys = [];
 
@@ -1382,7 +1435,7 @@
           const assignedDuration = document.getElementById("duration").value;
 
           const newApproval = "True";
-          const assignedLibrarian = "TestLibrarian";
+          const assignedLibrarian = getCookie("librarianEmail");
 
           if (assignedStudent && assignedDuration) {
             database.ref(`LibraryRecords/${bookRFID}`).update({
@@ -1532,7 +1585,7 @@
           const assignedDuration = "N/A";
 
           const newApproval = "false";
-          const assignedLibrarian = "TestLibrarian";
+          const assignedLibrarian = getCookie("librarianEmail");
 
           if (assignedStudent && assignedDuration) {
             database.ref(`LibraryRecords/${bookRFID}`).update({
@@ -1702,7 +1755,7 @@
       }
       function CatalogDisplayCard() {
         const cardValue = document.getElementById("CatalogBodyContent");
-        cardValue.innerHTML = "";
+        // cardValue.innerHTML = "";
 
         // Display information only for the selected books
         CatalogSelectedBookKeys.forEach((bookKey) => {
@@ -1972,13 +2025,15 @@
         return null;
       }
 
-      // Example of how to retrieve the password
+      // Example of how to retrieve the email
       document.addEventListener("DOMContentLoaded", function () {
-        const librarianPassword = getCookie("librarianPassword");
-        if (librarianPassword) {
-          console.log("Librarian Password:", librarianPassword);
+        const librarianEmail = getCookie("librarianEmail");
+        if (librarianEmail) {
+          console.log("Librarian Email:", librarianEmail);
         }
       });
+
+      console.log(getCookie("librarianEmail"));
     </script>
   </body>
 </html>
