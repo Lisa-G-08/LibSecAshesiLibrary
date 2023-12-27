@@ -41,7 +41,14 @@
       }
       #ViewCatalog_ {
         margin: 50px auto;
-        margin-top: 10%;
+        margin-left: 30%;
+        padding: 10px;
+        width: 40%; /* Set a standard width for the input */
+        box-sizing: border-box;
+        margin-bottom: 5px; /* Add a little space between the input and button */
+      }
+      #BorrowedBooks_ {
+        margin: 50px auto;
         margin-left: 30%;
         padding: 10px;
         width: 40%; /* Set a standard width for the input */
@@ -385,31 +392,40 @@
       </div>
     </div>
 
-    <!--- Borrowed Books --->
+    <!-- Check In -->
     <div id="BorrowedBooks" style="display: none">
-      <h2>Borrowed Books:</h2>
-      <table id="booksTable">
-        <thead>
-          <tr>
-            <th>Borrow Date</th>
-            <th>BookId</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Publication Year</th>
-            <th>Return Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>2023-12-10</td>
-            <td>2020167</td>
-            <td>Introduction to Data Structures</td>
-            <td>Ellie Mathews</td>
-            <td>2009</td>
-            <td>2023-12-20</td>
-          </tr>
-        </tbody>
-      </table>
+      <input
+        type="text"
+        id="BorrowedBooks_"
+        placeholder="Enter book name or RFID value"
+      />
+      <button id="FindBook">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <div
+        style="
+          display: flex;
+          padding-left: 20%;
+          flex-direction: row;
+          width: 85%;
+        "
+      >
+        <table>
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Book RFID</th>
+              <th>Name</th>
+              <th>Subject</th>
+              <th>Librarian</th>
+              <th>Student</th>
+              <th>Duration</th>
+              <th>Approval</th>
+            </tr>
+          </thead>
+          <tbody id="bookList"></tbody>
+        </table>
+      </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
@@ -491,12 +507,14 @@
       }
       document.addEventListener("DOMContentLoaded", function () {
         const studentEmail = getCookie("studentEmail");
+        console.log("student Email:", studentEmail);
         if (studentEmail) {
           console.log("student Email:", studentEmail);
         }
       });
       document.addEventListener("DOMContentLoaded", function () {
         const studentPassword = getCookie("studentPassword");
+
         if (studentPassword) {
           console.log("student password:", studentPassword);
         }
@@ -653,16 +671,16 @@
               // Use unique IDs for each checkbox
               const checkboxId = `CheckBox_${book.key}`;
               row.innerHTML = `
-          <td><input type="checkbox" id="${checkboxId}" onchange="ViewCatalogUpdateSelectedBooks('${book.key}')"/></td>
-          <td>${book.key}</td>
-          <td>${bookData.name}</td>
-          <td>${bookData.subject}</td>
-          <td>${bookData.assignedLibrarian}</td>
-          <td>${bookData.assignedStudent}</td>
-          <td>${bookData.assignedDuration}</td>
-          <td>${bookData.approval}</td>
+            <td><input type="checkbox" id="${checkboxId}" onchange="ViewCatalogUpdateSelectedBooks('${book.key}')"/></td>
+            <td>${book.key}</td>
+            <td>${bookData.name}</td>
+            <td>${bookData.subject}</td>
+            <td>${bookData.assignedLibrarian}</td>
+            <td>${bookData.assignedStudent}</td>
+            <td>${bookData.assignedDuration}</td>
+            <td>${bookData.approval}</td>
 
-        `;
+          `;
               ViewCatalogBookListTable.appendChild(row);
             });
           });
@@ -714,7 +732,7 @@
       }
       function ViewCatalogDisplayCard() {
         const cardValue = document.getElementById("ViewCatalogBodyContent");
-        cardValue.innerHTML = "";
+        // cardValue.innerHTML = "";
 
         // Display information only for the selected books
         ViewCatalogSelectedBookKeys.forEach((bookKey) => {
@@ -725,11 +743,11 @@
               const bookData = snapshot.val();
               const row = document.createElement("div");
               row.innerHTML = `
-          <p id="bookRFID"><strong>bookRFID:</strong> ${bookKey}</p>
-          <p id="bookName"><strong>bookName:</strong> ${bookData.name}</p>
-          <p id="bookSubject"><strong>bookSubject:</strong> ${bookData.subject}</p>
-          <p id="approval"><strong>approval:</strong> ${bookData.approval}</p>
-        `;
+            <p id="bookRFID"><strong>bookRFID:</strong> ${bookKey}</p>
+            <p id="bookName"><strong>bookName:</strong> ${bookData.name}</p>
+            <p id="bookSubject"><strong>bookSubject:</strong> ${bookData.subject}</p>
+            <p id="approval"><strong>approval:</strong> ${bookData.approval}</p>
+          `;
               cardValue.appendChild(row);
             });
         });
@@ -766,19 +784,164 @@
               ) {
                 const checkboxId = `CheckBox_${book.key}`;
                 row.innerHTML = `
-            <td style="display: none">${book.key}</td>
-            <td>${bookData.name}</td>
-            <td>${bookData.subject}</td>
-            <td>${bookData.assignedLibrarian}</td>
-            <td>${bookData.assignedStudent}</td>
-            <td>${bookData.assignedDuration}</td>
-            <td>${bookData.approval}</td>
-          `;
+              <td style="display: none">${book.key}</td>
+              <td>${bookData.name}</td>
+              <td>${bookData.subject}</td>
+              <td>${bookData.assignedLibrarian}</td>
+              <td>${bookData.assignedStudent}</td>
+              <td>${bookData.assignedDuration}</td>
+              <td>${bookData.approval}</td>
+            `;
                 ViewCatalogBookListTable.appendChild(row);
               }
             });
           });
       }
+      let selectedBookKeys = [];
+
+      function displayBooks() {
+        const bookListTable = document.getElementById("bookList");
+        bookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              // Use unique IDs for each checkbox
+              const checkboxId = `CheckBox_${book.key}`;
+              row.innerHTML = `
+        <td><input type="checkbox" id="${checkboxId}" onchange="updateSelectedBooks('${book.key}')"/></td>
+        <td>${book.key}</td>
+        <td>${bookData.name}</td>
+        <td>${bookData.subject}</td>
+        <td>${bookData.assignedLibrarian}</td>
+        <td>${bookData.assignedStudent}</td>
+        <td>${bookData.assignedDuration}</td>
+        <td>${bookData.approval}</td>
+
+      `;
+              bookListTable.appendChild(row);
+            });
+          });
+      }
+
+      // Update the array of selected book keys
+      function updateSelectedBooks(bookKey) {
+        const checkbox = document.getElementById(`CheckBox_${bookKey}`);
+        if (checkbox.checked) {
+          // Add the book key to the array
+          selectedBookKeys.push(bookKey);
+          displayCard();
+        } else {
+          // Remove the book key from the array
+          selectedBookKeys = selectedBookKeys.filter((key) => key !== bookKey);
+          displayCard();
+        }
+      }
+
+      function editBook() {
+        console.log(selectedBookKeys);
+        for (let i = 0; i < selectedBookKeys.length; i++) {
+          const bookRFID = selectedBookKeys[i];
+          const assignedStudent = document.getElementById("studentID").value;
+          const assignedDuration = document.getElementById("duration").value;
+
+          const newApproval = "True";
+          const assignedLibrarian = getCookie("librarianEmail");
+
+          if (assignedStudent && assignedDuration) {
+            database.ref(`LibraryRecords/${bookRFID}`).update({
+              assignedStudent: assignedStudent,
+              assignedDuration: assignedDuration,
+              assignedLibrarian: assignedLibrarian,
+              approval: newApproval.toLowerCase() === "true",
+            });
+
+            // Assuming displayBooks is a function to update the UI, you may call it here
+          } else {
+            alert("Please enter a valid student ID and duration");
+          }
+        }
+        displayBooks();
+        displayCard();
+      }
+      function displayCard() {
+        const cardValue = document.getElementById("bodyContent");
+        // cardValue.innerHTML = "";
+
+        // Display information only for the selected books
+        selectedBookKeys.forEach((bookKey) => {
+          database
+            .ref(`LibraryRecords/${bookKey}`)
+            .once("value")
+            .then((snapshot) => {
+              const bookData = snapshot.val();
+              const row = document.createElement("div");
+              row.innerHTML = `
+        <p id="bookRFID"><strong>bookRFID:</strong> ${bookKey}</p>
+        <p id="bookName"><strong>bookName:</strong> ${bookData.name}</p>
+        <p id="bookSubject"><strong>bookSubject:</strong> ${bookData.subject}</p>
+        <p id="approval"><strong>approval:</strong> ${bookData.approval}</p>
+      `;
+              cardValue.appendChild(row);
+            });
+        });
+      }
+
+      function displayBooks() {
+        const bookListTable = document.getElementById("bookList");
+        const filterInput = document
+          .getElementById("BorrowedBooks_")
+          .value.toLowerCase(); // Get the filter input value
+
+        bookListTable.innerHTML = "";
+
+        database
+          .ref("LibraryRecords")
+          .once("value")
+          .then((snapshot) => {
+            snapshot.forEach((book) => {
+              const bookData = book.val();
+              const row = document.createElement("tr");
+
+              const bookName = bookData.name.toLowerCase(); // Convert book name to lowercase for case-insensitive search
+              const bookRFID = book.key.toLowerCase(); // Convert book RFID to lowercase for case-insensitive search
+
+              // Check if the filterInput is empty or matches the book name or RFID
+              if (
+                filterInput === "" ||
+                bookName.includes(filterInput) ||
+                (bookRFID.includes(filterInput) &&
+                  bookRFID.includes(getCookie("studentPassword")))
+              ) {
+                const checkboxId = `CheckBox_${book.key}`;
+                row.innerHTML = `
+              <td><input type="checkbox" id="${checkboxId}" onchange="updateSelectedBooks('${book.key}')"/></td>
+              <td>${book.key}</td>
+              <td>${bookData.name}</td>
+              <td>${bookData.subject}</td>
+              <td>${bookData.assignedLibrarian}</td>
+              <td>${bookData.assignedStudent}</td>
+              <td>${bookData.assignedDuration}</td>
+              <td>${bookData.approval}</td>
+            `;
+                bookListTable.appendChild(row);
+              }
+            });
+          });
+      }
+
+      // Add an event listener for the FindBook button to trigger the displayBooks function
+      document
+        .getElementById("FindBook")
+        .addEventListener("click", displayBooks);
+
+      displayBooks();
+      displayCard();
 
       // Add an event listener for the ViewCatalogFindBook button to trigger the ViewCatalogDisplayBooks function
       document
